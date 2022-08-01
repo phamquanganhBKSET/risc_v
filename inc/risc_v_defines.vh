@@ -1,5 +1,5 @@
 `define INST_WIDTH      32
-`define REG_WIDTH       32
+`define REG_WIDTH       5'd32
 `define NUM_REG         32
 `define MEM_WIDTH       8
 `define IMM_WIDTH       12
@@ -12,7 +12,7 @@
 `define IMM_SEL_I       2'b00
 `define IMM_SEL_S       2'b01
 `define IMM_SEL_B       2'b10
-`define IMM_SEL_U       2'b11
+`define IMM_SEL_J       2'b11
 `define IMM_SEL_WIDTH   2
 `define ADD             5'b0110011
 `define ADD_FUNCT3      3'h0

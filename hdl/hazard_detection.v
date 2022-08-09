@@ -1,4 +1,4 @@
-`include "../../inc/risc_v_defines.v"
+`include "../inc/risc_v_defines.vh"
 
 module hazard_detection #(
   parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH
@@ -10,7 +10,8 @@ module hazard_detection #(
   input                       ID_EX_mem_wr_en, // ID/EX Mem write enable
   output                      ctrl_sel       , // Control select
   output                      pc_write       , // PC Write
-  output                      IF_ID_flush      // IF/ID Flush
+  output                      IF_ID_flush    , // IF/ID Flush
+  output                      IF_ID_write      // IF/ID Write
 );
 
   //============================================
@@ -18,6 +19,12 @@ module hazard_detection #(
   //============================================
 
   assign IF_ID_flush = (!ID_EX_mem_wr_en) & ((ID_EX_rd == IF_ID_rs1) | (ID_EX_rd == IF_ID_rs2)); // Load instruction
+
+  //============================================
+  //   IF/ID write when mem data hazard occurs
+  //============================================
+
+  assign IF_ID_write = (!ID_EX_mem_wr_en) & ((ID_EX_rd == IF_ID_rs1) | (ID_EX_rd == IF_ID_rs2)); // Load instruction
 
   //============================================
   //                  PC Write

@@ -1,4 +1,4 @@
-`include "../../inc/risc_v_defines.v"
+`include "../inc/risc_v_defines.vh"
 
 module forwarding_unit #(
   parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH

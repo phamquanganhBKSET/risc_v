@@ -1,9 +1,9 @@
 `include "../inc/risc_v_defines.vh"
 
 module IMEM #(
-  parameter MEM_WIDTH  = `MEM_WIDTH,
-  parameter PC_WIDTH   = `PC_WIDTH ,
-  parameter INST_WIDTH = `REG_WIDTH        
+  parameter MEM_WIDTH  = `MEM_WIDTH ,
+  parameter PC_WIDTH   = `PC_WIDTH  ,
+  parameter INST_WIDTH = `INST_WIDTH        
 )
 (
 	input                   clk    , // Clock signal

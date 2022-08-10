@@ -4,16 +4,17 @@
 `define MEM_WIDTH       8
 `define IMM_WIDTH       12
 `define IMM_WIDTH_U     20
-`define IMEM_DEPTH      2**10 // 1KB
-`define DMEM_DEPTH      2**20 // 1MB
+`define IMEM_DEPTH      2**32
+`define DMEM_DEPTH      2**32
 `define REG_ADDR_WIDTH  $clog2(`NUM_REG)
 `define PC_WIDTH        $clog2(`IMEM_DEPTH)
 `define DMEM_ADDR_WIDTH $clog2(`DMEM_DEPTH)
-`define IMM_SEL_I       2'b00
-`define IMM_SEL_S       2'b01
-`define IMM_SEL_B       2'b10
-`define IMM_SEL_J       2'b11
-`define IMM_SEL_WIDTH   2
+`define IMM_SEL_R       3'b000
+`define IMM_SEL_I       3'b001
+`define IMM_SEL_S       3'b010
+`define IMM_SEL_B       3'b011
+`define IMM_SEL_J       3'b100
+`define IMM_SEL_WIDTH   3
 `define ADD             7'b0110011
 `define ADD_FUNCT3      3'h0
 `define ADD_FUNCT7      7'h00

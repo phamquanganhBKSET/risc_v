@@ -15,12 +15,12 @@ module branch_comp #(
   //                 Branch equal
   //===========================================================
 
-  assign br_eq = br_un ? ($signed(data_rs1) == $signed(data_rs2)) : (data_rs1 == data_rs2);
+  assign br_eq = br_un ? (data_rs1 == data_rs2) : ($signed(data_rs1) == $signed(data_rs2));
 
   //===========================================================
   //            Branch less than
   //===========================================================
 
-  assign br_lt = br_un ? ($signed(data_rs1) < $signed(data_rs2)) : (data_rs1 < data_rs2);
+  assign br_lt = br_un ? (data_rs1 < data_rs2) : ($signed(data_rs1) < $signed(data_rs2));
 
 endmodule

@@ -21,10 +21,10 @@ module reg_ID_EX #(
   input                           ASel              , // A select
   input                           BSel              , // B select
   input                           wb_sel            , // WB select
-  input      [6:0               ] ID_EX_inst_opcode , // IF/ID instruction opcode
-  input      [REG_ADDR_WIDTH-1:0] ID_EX_rs1         , // IF/ID.RegisterRs1
-  input      [REG_ADDR_WIDTH-1:0] ID_EX_rs2         , // IF/ID.RegisterRs2
-  input      [REG_ADDR_WIDTH-1:0] ID_EX_rd          , // IF/ID.RegisterRd
+  output     [6:0               ] ID_EX_inst_opcode , // IF/ID instruction opcode
+  output     [REG_ADDR_WIDTH-1:0] ID_EX_rs1         , // IF/ID.RegisterRs1
+  output     [REG_ADDR_WIDTH-1:0] ID_EX_rs2         , // IF/ID.RegisterRs2
+  output     [REG_ADDR_WIDTH-1:0] ID_EX_rd          , // IF/ID.RegisterRd
   output reg                      ID_EX_pc_sel      , // ID/EX PC select
   output reg [REG_WIDTH-1:0     ] ID_EX_data_out_1  , // ID/EX Data rs1
   output reg [REG_WIDTH-1:0     ] ID_EX_data_out_2  , // ID/EX Data rs2

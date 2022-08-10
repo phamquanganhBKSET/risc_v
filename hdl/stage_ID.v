@@ -13,12 +13,11 @@ module stage_ID #(
   input                           reset_n          , // Asynchronous reset
   input      [PC_WIDTH-1:0      ] IF_ID_pc         , // IF/ID PC
   input      [INST_WIDTH-1:0    ] IF_ID_inst       , // ID/ID instruction
-  input      [6:0               ] IF_ID_inst_opcode, // IF/ID instruction opcode
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1        , // IF/ID.RegisterRs1
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2        , // IF/ID.RegisterRs2
-  input      [REG_ADDR_WIDTH-1:0] IF_ID_rd         , // IF/ID.RegisterRd
   input                           MEM_WB_reg_wr_en , // MEM/WB RegWrite
   input                           MEM_WB_rd        , // MEM/WB.RegisterRd
+  input      [REG_WIDTH-1:0     ] WB_data          , // WB data
   input                           forward_comp1    , // Forward compare 1
   input                           forward_comp2    , // Forward compare 2
   input      [REG_WIDTH-1:0     ] alu_out          , // ALU out
@@ -61,8 +60,8 @@ module stage_ID #(
       .wr_en   (MEM_WB_reg_wr_en),
       .addr_rs1(IF_ID_rs1       ),
       .addr_rs2(IF_ID_rs2       ),
-      .addr_rd (IF_ID_rd        ),
-      .data_rd (MEM_WB_rd       ),
+      .addr_rd (MEM_WB_rd       ),
+      .data_rd (WB_data         ),
       .data_rs1(data_rs1        ),
       .data_rs2(data_rs2        ) 
   );

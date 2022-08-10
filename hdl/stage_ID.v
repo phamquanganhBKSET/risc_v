@@ -16,10 +16,10 @@ module stage_ID #(
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1        , // IF/ID.RegisterRs1
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2        , // IF/ID.RegisterRs2
   input                           MEM_WB_reg_wr_en , // MEM/WB RegWrite
-  input                           MEM_WB_rd        , // MEM/WB.RegisterRd
+  input      [REG_ADDR_WIDTH-1:0] MEM_WB_rd        , // MEM/WB.RegisterRd
   input      [REG_WIDTH-1:0     ] WB_data          , // WB data
-  input                           forward_comp1    , // Forward compare 1
-  input                           forward_comp2    , // Forward compare 2
+  input      [1:0               ] forward_comp1    , // Forward compare 1
+  input      [1:0               ] forward_comp2    , // Forward compare 2
   input      [REG_WIDTH-1:0     ] alu_out          , // ALU out
   input      [REG_WIDTH-1:0     ] DMEM_data_out    , // DMEM data out
   output     [PC_WIDTH-1:0      ] pc_imm           , // PC immediate
@@ -75,9 +75,9 @@ module stage_ID #(
     .IMM_SEL_WIDTH(IMM_SEL_WIDTH),
     .REG_WIDTH    (REG_WIDTH    ) 
   ) imm_gen_inst (
-      .inst   (inst   ),
-      .imm_sel(imm_sel),
-      .imm_out(imm_out) 
+      .inst   (IF_ID_inst),
+      .imm_sel(imm_sel   ),
+      .imm_out(imm_out   ) 
   );
 
   //============================================

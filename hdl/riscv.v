@@ -19,15 +19,80 @@ module riscv
 );
 
 
-wire [PC_WIDTH-1:0  ] pc_imm     ; // Program counter
-wire                  pc_sel     ; // PC select
-wire                  pc_write   ; // PC write
-wire                  IF_flush   ; // IF flush
-wire                  IF_ID_write; // IF/ID write
-wire [PC_WIDTH-1:0  ] pc         ; // PC register
-wire [PC_WIDTH-1:0  ] pc_next    ; // PC next
-wire [INST_WIDTH-1:0] inst       ; // Instruction
-wire [PC_WIDTH-1:0  ] wr_addr    ; // Write address (write instructions to IMEM)
+wire  [PC_WIDTH-1:0      ]     pc_imm             ; // Program counter
+wire                           pc_sel             ; // PC select
+wire                           pc_write           ; // PC write
+wire                           IF_flush           ; // IF flush
+wire                           IF_ID_write        ; // IF/ID write
+wire  [PC_WIDTH-1:0      ]     pc                 ; // PC register
+wire  [PC_WIDTH-1:0      ]     pc_next            ; // PC next
+wire  [INST_WIDTH-1:0    ]     inst               ; // Instruction
+wire  [PC_WIDTH-1:0      ]     wr_addr            ; // Write address (write instructions to IMEM)
+wire  [INST_WIDTH-1:0    ]     wr_data            ; // Write data
+wire  [PC_WIDTH-1:0      ]     IF_ID_pc           ;
+wire  [INST_WIDTH-1:0    ]     IF_ID_inst         ;
+wire  [6:0               ]     IF_ID_inst_opcode  ;
+wire  [REG_ADDR_WIDTH-1:0]     IF_ID_rs1          ;
+wire  [REG_ADDR_WIDTH-1:0]     IF_ID_rs2          ;
+wire  [REG_ADDR_WIDTH-1:0]     IF_ID_rd           ;
+
+wire  [REG_ADDR_WIDTH-1:0]     ID_EX_rd           ; // ID/EX.RegisterRd
+wire                           ctrl_sel           ; // Control select
+wire                           IF_ID_flush        ; // IF/ID Flush
+
+wire                           MEM_WB_reg_wr_en   ; // MEM/WB RegWrite
+wire  [REG_ADDR_WIDTH-1:0]     MEM_WB_rd          ; // MEM/WB.RegisterRd
+wire  [REG_WIDTH-1:0     ]     WB_data            ; // WB data
+wire  [REG_WIDTH-1:0     ]     alu_out            ; // ALU out
+wire  [REG_WIDTH-1:0     ]     DMEM_data_out      ; // DMEM data out
+wire  [REG_WIDTH-1:0     ]     data_out_1         ; // Data out rs1
+wire  [REG_WIDTH-1:0     ]     data_out_2         ; // Data out rs2
+wire  [REG_WIDTH-1:0     ]     imm_out            ; // Immediate out
+wire                           reg_write_en       ; // Reg write enable
+wire  [2:0               ]     alu_sel            ; // ALU select
+wire                           mem_write_en       ; // MEM write enable
+wire                           ASel               ; // A select
+wire                           BSel               ; // B select
+wire                           wb_sel             ; // WB select
+wire [1:0                ]     forward_comp1      ; // Forward comp 1
+wire [1:0                ]     forward_comp2      ; // Forward comp 2
+wire                           br_lt              ;
+wire                           br_eq              ;
+wire [IMM_SEL_WIDTH-1:0  ]     imm_sel            ;
+wire                           br_un              ;
+wire                           mem_write          ;
+wire [REG_WIDTH-1:0      ]     dataB              ; // Data B
+wire [REG_WIDTH-1:0      ]     EX_MEM_alu_out     ; // EX/MEM ALU out
+wire [1:0                ]     forwardA           ; // Forward A
+wire [1:0                ]     forwardB           ; // Forward B
+wire [REG_WIDTH-1:0      ]     EX_MEM_dataB       ; // Data B
+wire [6:0                ]     EX_MEM_inst_opcode ; // IF/ID instruction opcode
+wire [REG_ADDR_WIDTH-1:0 ]     EX_MEM_rs1         ; // IF/ID.RegisterRs1
+wire [REG_ADDR_WIDTH-1:0 ]     EX_MEM_rs2         ; // IF/ID.RegisterRs2
+wire [REG_ADDR_WIDTH-1:0 ]     EX_MEM_rd          ; // IF/ID.RegisterRd
+wire                           EX_MEM_reg_write_en; // ID/EX Reg write enable
+wire                           EX_MEM_mem_write_en; // ID/EX MEM write enable
+wire                           EX_MEM_wb_sel      ; 
+wire [6:0                ]     ID_EX_inst_opcode  ; // IF/ID instruction opcode
+wire [REG_ADDR_WIDTH-1:0 ]     ID_EX_rs1          ; // IF/ID.RegisterRs1
+wire [REG_ADDR_WIDTH-1:0 ]     ID_EX_rs2          ; // IF/ID.RegisterRs2
+wire                           ID_EX_pc_sel       ; // ID/EX PC select
+wire [REG_WIDTH-1:0      ]     ID_EX_data_out_1   ; // ID/EX Data rs1
+wire [REG_WIDTH-1:0      ]     ID_EX_data_out_2   ; // ID/EX Data rs2
+wire [REG_WIDTH-1:0      ]     ID_EX_imm_out      ; // ID/EX Immediate out
+wire                           ID_EX_reg_write_en ; // ID/EX Reg write enable
+wire [2:0                ]     ID_EX_alu_sel      ; // ID/EX ALU select
+wire                           ID_EX_mem_write_en ; // ID/EX MEM write enable
+wire                           ID_EX_ASel         ; // A select
+wire                           ID_EX_BSel         ; // B select
+wire                           ID_EX_wb_sel       ;
+wire [REG_WIDTH-1:0     ]      MEM_WB_alu_out     ; // ALU out
+wire [REG_WIDTH-1:0     ]      MEM_WB_dataB       ; // Data B
+wire [6:0               ]      MEM_WB_inst_opcode ; // IF/ID instruction opcode
+wire [REG_ADDR_WIDTH-1:0]      MEM_WB_rs1         ; // IF/ID.RegisterRs1
+wire [REG_ADDR_WIDTH-1:0]      MEM_WB_rs2         ; // IF/ID.RegisterRs2
+wire                           MEM_WB_reg_write_en; // ID/EX Reg write enable
+wire                           MEM_WB_reg_wb_sel  ;
 
 stage_IF #(
   .MEM_WIDTH  (MEM_WIDTH  ),
@@ -48,13 +113,6 @@ stage_IF #(
   .inst       (inst       )
 );
 
-wire [PC_WIDTH-1:0      ] IF_ID_pc         ;
-wire [INST_WIDTH-1:0    ] IF_ID_inst       ;
-wire [6:0               ] IF_ID_inst_opcode;
-wire [REG_ADDR_WIDTH-1:0] IF_ID_rs1        ;
-wire [REG_ADDR_WIDTH-1:0] IF_ID_rs2        ;
-wire [REG_ADDR_WIDTH-1:0] IF_ID_rd         ;
-
 reg_IF_ID #(
   .PC_WIDTH      (PC_WIDTH       ),
   .INST_WIDTH    (INST_WIDTH     ),
@@ -72,9 +130,6 @@ reg_IF_ID #(
   .IF_ID_rd         (IF_ID_rd         )  // IF/ID.RegisterRd
 );
 
-wire  [REG_ADDR_WIDTH-1:0] ID_EX_rd       ; // ID/EX.RegisterRd
-wire                       ctrl_sel       ; // Control select
-wire                       IF_ID_flush    ; // IF/ID Flush
 hazard_detection #(
   .REG_ADDR_WIDTH (REG_ADDR_WIDTH)
 ) hazard_detection (
@@ -88,21 +143,6 @@ hazard_detection #(
   .IF_ID_write    (IF_ID_write    )  // IF/ID Write
 );
 
-
-wire                           MEM_WB_reg_wr_en ; // MEM/WB RegWrite
-wire                           MEM_WB_rd        ; // MEM/WB.RegisterRd
-wire  [REG_WIDTH-1:0     ]     WB_data          ; // WB data
-wire  [REG_WIDTH-1:0     ]     alu_out          ; // ALU out
-wire  [REG_WIDTH-1:0     ]     DMEM_data_out    ; // DMEM data out
-wire  [REG_WIDTH-1:0     ]     data_out_1       ; // Data out rs1
-wire  [REG_WIDTH-1:0     ]     data_out_2       ; // Data out rs2
-wire  [REG_WIDTH-1:0     ]     imm_out          ; // Immediate out
-wire                           reg_write_en     ; // Reg write enable
-wire  [2:0               ]     alu_sel          ; // ALU select
-wire                           mem_write_en     ; // MEM write enable
-wire                           ASel             ; // A select
-wire                           BSel             ; // B select
-wire                           wb_sel           ; // WB select
 
 stage_ID #(
   .NUM_REG       (NUM_REG       ),
@@ -138,14 +178,6 @@ stage_ID #(
   .wb_sel          (wb_sel          )   // WB select
 );
 
-
-
-wire                          br_lt         ;
-wire                          br_eq         ;
-wire      [IMM_SEL_WIDTH-1:0] imm_sel       ;
-wire                          br_un         ;
-wire                          mem_write     ;
-
 control_logic #(
   .INST_WIDTH   (INST_WIDTH   ),
   .IMM_SEL_WIDTH(IMM_SEL_WIDTH) 
@@ -165,21 +197,6 @@ control_logic #(
   .mem_write   (mem_write   )  ,
   .wb_sel      (wb_sel      )   
 );
-
-
-wire [6:0               ] ID_EX_inst_opcode ; // IF/ID instruction opcode
-wire [REG_ADDR_WIDTH-1:0] ID_EX_rs1         ; // IF/ID.RegisterRs1
-wire [REG_ADDR_WIDTH-1:0] ID_EX_rs2         ; // IF/ID.RegisterRs2
-wire                      ID_EX_pc_sel      ; // ID/EX PC select
-wire [REG_WIDTH-1:0     ] ID_EX_data_out_1  ; // ID/EX Data rs1
-wire [REG_WIDTH-1:0     ] ID_EX_data_out_2  ; // ID/EX Data rs2
-wire [REG_WIDTH-1:0     ] ID_EX_imm_out     ; // ID/EX Immediate out
-wire                      ID_EX_reg_write_en; // ID/EX Reg write enable
-wire [2:0               ] ID_EX_alu_sel     ; // ID/EX ALU select
-wire                      ID_EX_mem_write_en; // ID/EX MEM write enable
-wire                      ID_EX_ASel        ; // A select
-wire                      ID_EX_BSel        ; // B select
-wire                      ID_EX_wb_sel      ;
 
 reg_ID_EX #(
   .REG_WIDTH     (REG_WIDTH     ),
@@ -218,8 +235,6 @@ reg_ID_EX #(
   .ID_EX_wb_sel      (ID_EX_wb_sel      )  // ID/EX WB select
 );
 
-wire [REG_WIDTH-1:0] dataB           ; // Data B
-
 stage_EX #(
   .REG_WIDTH(REG_WIDTH)
 ) stage_EX (
@@ -238,16 +253,6 @@ stage_EX #(
   .alu_out         (alu_out         ), // ALU out
   .dataB           (dataB           )  // Data B
 );
-
-
-wire [REG_WIDTH-1:0     ] EX_MEM_dataB       ; // Data B
-wire [6:0               ] EX_MEM_inst_opcode ; // IF/ID instruction opcode
-wire [REG_ADDR_WIDTH-1:0] EX_MEM_rs1         ; // IF/ID.RegisterRs1
-wire [REG_ADDR_WIDTH-1:0] EX_MEM_rs2         ; // IF/ID.RegisterRs2
-wire [REG_ADDR_WIDTH-1:0] EX_MEM_rd          ; // IF/ID.RegisterRd
-wire                      EX_MEM_reg_write_en; // ID/EX Reg write enable
-wire                      EX_MEM_mem_write_en; // ID/EX MEM write enable
-wire                      EX_MEM_wb_sel      ; 
 
 reg_EX_MEM #(
   .REG_WIDTH      (REG_WIDTH     ),
@@ -289,15 +294,6 @@ stage_MEM  #(
   .DMEM_data_out      (DMEM_data_out      )  // ALU out
 );
 
-
-wire [REG_WIDTH-1:0     ] MEM_WB_alu_out     ; // ALU out
-wire [REG_WIDTH-1:0     ] MEM_WB_dataB       ; // Data B
-wire [6:0               ] MEM_WB_inst_opcode ; // IF/ID instruction opcode
-wire [REG_ADDR_WIDTH-1:0] MEM_WB_rs1         ; // IF/ID.RegisterRs1
-wire [REG_ADDR_WIDTH-1:0] MEM_WB_rs2         ; // IF/ID.RegisterRs2
-wire                      MEM_WB_reg_write_en; // ID/EX Reg write enable
-wire                      MEM_WB_reg_wb_sel  ;
-
 reg_MEM_WB #(
   .REG_WIDTH     (REG_WIDTH     ),
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH) 
@@ -332,7 +328,7 @@ stage_WB #(
   .MEM_WB_alu_out     (MEM_WB_alu_out     ),  // ALU out
   .EX_MEM_alu_out     (EX_MEM_alu_out     ),  // ALU out
   .EX_MEM_reg_write_en(EX_MEM_reg_write_en),  // ID/EX Reg write enable
-  .wb_data            (wb_data            )   // wb_data to register file
+  .WB_data            (WB_data            )   // wb_data to register file
 );
 
 forwarding_unit #(

@@ -1,4 +1,4 @@
-`define FILE_PATH       "C:\\Users\\HH\\Documents\\KTMT\\risc_v\\sim\\tb\\inst.txt"
+`define FILE_PATH       "..\\tb\\inst.txt"
 `define INST_WIDTH      32
 `define REG_WIDTH       5'd32
 `define NUM_REG         32

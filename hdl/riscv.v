@@ -20,13 +20,13 @@ module riscv #(
 wire  [PC_WIDTH-1:0      ]     pc_imm             ; // Program counter
 wire                           pc_sel             ; // PC select
 wire                           pc_write           ; // PC write
-wire                           IF_flush           ; // IF flush
+wire                           IF_ID_flush        ; // IF flush
 wire                           IF_ID_write        ; // IF/ID write
 wire  [PC_WIDTH-1:0      ]     pc                 ; // PC register
 wire  [PC_WIDTH-1:0      ]     pc_next            ; // PC next
 wire  [INST_WIDTH-1:0    ]     inst               ; // Instruction
-wire  [PC_WIDTH-1:0      ]     wr_addr            ; // Write address (write instructions to IMEM)
-wire  [INST_WIDTH-1:0    ]     wr_data            ; // Write data
+// wire  [PC_WIDTH-1:0      ]     wr_addr            ; // Write address (write instructions to IMEM)
+// wire  [INST_WIDTH-1:0    ]     wr_data            ; // Write data
 wire  [PC_WIDTH-1:0      ]     IF_ID_pc           ;
 wire  [INST_WIDTH-1:0    ]     IF_ID_inst         ;
 wire  [6:0               ]     IF_ID_inst_opcode  ;
@@ -36,9 +36,8 @@ wire  [REG_ADDR_WIDTH-1:0]     IF_ID_rd           ;
 
 wire  [REG_ADDR_WIDTH-1:0]     ID_EX_rd           ; // ID/EX.RegisterRd
 wire                           ctrl_sel           ; // Control select
-wire                           IF_ID_flush        ; // IF/ID Flush
 
-wire                           MEM_WB_reg_wr_en   ; // MEM/WB RegWrite
+// wire                           MEM_WB_reg_wr_en   ; // MEM/WB RegWrite
 wire  [REG_ADDR_WIDTH-1:0]     MEM_WB_rd          ; // MEM/WB.RegisterRd
 wire  [REG_WIDTH-1:0     ]     WB_data            ; // WB data
 wire  [REG_WIDTH-1:0     ]     alu_out            ; // ALU out
@@ -54,11 +53,11 @@ wire                           BSel               ; // B select
 wire                           wb_sel             ; // WB select
 wire [1:0                ]     forward_comp1      ; // Forward comp 1
 wire [1:0                ]     forward_comp2      ; // Forward comp 2
-wire                           br_lt              ;
-wire                           br_eq              ;
-wire [IMM_SEL_WIDTH-1:0  ]     imm_sel            ;
-wire                           br_un              ;
-wire                           mem_write          ;
+// wire                           br_lt              ;
+// wire                           br_eq              ;
+// wire [IMM_SEL_WIDTH-1:0  ]     imm_sel            ;
+// wire                           br_un              ;
+// wire                           mem_write          ;
 wire [REG_WIDTH-1:0      ]     dataB              ; // Data B
 wire [REG_WIDTH-1:0      ]     EX_MEM_alu_out     ; // EX/MEM ALU out
 wire [1:0                ]     forwardA           ; // Forward A
@@ -99,12 +98,12 @@ stage_IF #(
 ) stage_IF(
   .clk        (clk        ),
   .reset_n    (reset_n    ),
-  .wr_addr    (wr_addr    ),
-  .wr_data    (wr_data    ),
+  // .wr_addr    (wr_addr    ),
+  // .wr_data    (wr_data    ),
   .pc_imm     (pc_imm     ),
   .pc_sel     (pc_sel     ),
   .pc_write   (pc_write   ),
-  .IF_flush   (IF_flush   ),
+  .IF_flush   (IF_ID_flush),
   .IF_ID_write(IF_ID_write),
   .pc         (pc         ),
   .pc_next    (pc_next    ),
@@ -131,14 +130,14 @@ reg_IF_ID #(
 hazard_detection #(
   .REG_ADDR_WIDTH (REG_ADDR_WIDTH)
 ) hazard_detection (
-  .IF_ID_rs1      (IF_ID_rs1      ), // IF/ID.RegisterRs1
-  .IF_ID_rs2      (IF_ID_rs2      ), // IF/ID.RegisterRs2
-  .ID_EX_rd       (ID_EX_rd       ), // ID/EX.RegisterRd
-  .ID_EX_mem_wr_en(ID_EX_mem_wr_en), // ID/EX Mem write enable
-  .ctrl_sel       (ctrl_sel       ), // Control select
-  .pc_write       (pc_write       ), // PC Write
-  .IF_ID_flush    (IF_ID_flush    ), // IF/ID Flush
-  .IF_ID_write    (IF_ID_write    )  // IF/ID Write
+  .IF_ID_rs1      (IF_ID_rs1         ), // IF/ID.RegisterRs1
+  .IF_ID_rs2      (IF_ID_rs2         ), // IF/ID.RegisterRs2
+  .ID_EX_rd       (ID_EX_rd          ), // ID/EX.RegisterRd
+  .ID_EX_mem_wr_en(ID_EX_mem_write_en), // ID/EX Mem write enable
+  .ctrl_sel       (ctrl_sel          ), // Control select
+  .pc_write       (pc_write          ), // PC Write
+  .IF_ID_flush    (IF_ID_flush       ), // IF/ID Flush
+  .IF_ID_write    (IF_ID_write       )  // IF/ID Write
 );
 
 
@@ -150,51 +149,51 @@ stage_ID #(
   .INST_WIDTH    (INST_WIDTH    ),
   .IMM_SEL_WIDTH (IMM_SEL_WIDTH ) 
 ) stage_ID (
-  .clk             (clk             ) , // Clock signal
-  .reset_n         (reset_n         ) , // Asynchronous reset
-  .IF_ID_pc        (IF_ID_pc        ) , // IF/ID PC
-  .IF_ID_inst      (IF_ID_inst      ) , // ID/ID instruction
-  .IF_ID_rs1       (IF_ID_rs1       ) , // IF/ID.RegisterRs1
-  .IF_ID_rs2       (IF_ID_rs2       ) , // IF/ID.RegisterRs2
-  .MEM_WB_reg_wr_en(MEM_WB_reg_wr_en) , // MEM/WB RegWrite
-  .MEM_WB_rd       (MEM_WB_rd       ) , // MEM/WB.RegisterRd
-  .WB_data         (WB_data         ) , // WB data
-  .forward_comp1   (forward_comp1   ) , // Forward compare 1
-  .forward_comp2   (forward_comp2   ) , // Forward compare 2
-  .alu_out         (alu_out         ) , // ALU out
-  .DMEM_data_out   (DMEM_data_out   ) , // DMEM data out
-  .pc_imm          (pc_imm          ) , // PC immediate
-  .pc_sel          (pc_sel          ) , // PC select
-  .data_out_1      (data_out_1      ) , // Data out rs1
-  .data_out_2      (data_out_2      ) , // Data out rs2
-  .imm_out         (imm_out         ) , // Immediate out
-  .reg_write_en    (reg_write_en    ) , // Reg write enable
-  .alu_sel         (alu_sel         ) , // ALU select
-  .mem_write_en    (mem_write_en    ) , // MEM write enable
-  .ASel            (ASel            ) , // A select
-  .BSel            (BSel            ) , // B select
-  .wb_sel          (wb_sel          )   // WB select
+  .clk             (clk                ) , // Clock signal
+  .reset_n         (reset_n            ) , // Asynchronous reset
+  .IF_ID_pc        (IF_ID_pc           ) , // IF/ID PC
+  .IF_ID_inst      (IF_ID_inst         ) , // ID/ID instruction
+  .IF_ID_rs1       (IF_ID_rs1          ) , // IF/ID.RegisterRs1
+  .IF_ID_rs2       (IF_ID_rs2          ) , // IF/ID.RegisterRs2
+  .MEM_WB_reg_wr_en(MEM_WB_reg_write_en) , // MEM/WB RegWrite
+  .MEM_WB_rd       (MEM_WB_rd          ) , // MEM/WB.RegisterRd
+  .WB_data         (WB_data            ) , // WB data
+  .forward_comp1   (forward_comp1      ) , // Forward compare 1
+  .forward_comp2   (forward_comp2      ) , // Forward compare 2
+  .alu_out         (alu_out            ) , // ALU out
+  .DMEM_data_out   (DMEM_data_out      ) , // DMEM data out
+  .pc_imm          (pc_imm             ) , // PC immediate
+  .pc_sel          (pc_sel             ) , // PC select
+  .data_out_1      (data_out_1         ) , // Data out rs1
+  .data_out_2      (data_out_2         ) , // Data out rs2
+  .imm_out         (imm_out            ) , // Immediate out
+  .reg_write_en    (reg_write_en       ) , // Reg write enable
+  .alu_sel         (alu_sel            ) , // ALU select
+  .mem_write_en    (mem_write_en       ) , // MEM write enable
+  .ASel            (ASel               ) , // A select
+  .BSel            (BSel               ) , // B select
+  .wb_sel          (wb_sel             )   // WB select
 );
 
-control_logic #(
-  .INST_WIDTH   (INST_WIDTH   ),
-  .IMM_SEL_WIDTH(IMM_SEL_WIDTH) 
-) control_logic (
-  .clk         (clk         )  ,  // Clock
-  .reset_n     (reset_n     )  ,  // Asynchronous reset active low
-  .br_eq       (br_eq       )  ,
-  .br_lt       (br_lt       )  ,
-  .inst        (inst        )  ,
-  .imm_sel     (imm_sel     )  ,
-  .reg_write_en(reg_write_en)  ,
-  .pc_sel      (pc_sel      )  ,
-  .br_un       (br_un       )  ,
-  .ASel        (ASel        )  ,
-  .BSel        (BSel        )  ,
-  .alu_sel     (alu_sel     )  ,
-  .mem_write   (mem_write   )  ,
-  .wb_sel      (wb_sel      )   
-);
+// control_logic #(
+//   .INST_WIDTH   (INST_WIDTH   ),
+//   .IMM_SEL_WIDTH(IMM_SEL_WIDTH) 
+// ) control_logic (
+//   .clk         (clk         )  ,  // Clock
+//   .reset_n     (reset_n     )  ,  // Asynchronous reset active low
+//   .br_eq       (br_eq       )  ,
+//   .br_lt       (br_lt       )  ,
+//   .inst        (inst        )  ,
+//   .imm_sel     (imm_sel     )  ,
+//   .reg_write_en(reg_write_en)  ,
+//   .pc_sel      (pc_sel      )  ,
+//   .br_un       (br_un       )  ,
+//   .ASel        (ASel        )  ,
+//   .BSel        (BSel        )  ,
+//   .alu_sel     (alu_sel     )  ,
+//   .mem_write   (mem_write   )  ,
+//   .wb_sel      (wb_sel      )   
+// );
 
 reg_ID_EX #(
   .REG_WIDTH     (REG_WIDTH     ),
@@ -207,7 +206,7 @@ reg_ID_EX #(
   .IF_ID_rs2         (IF_ID_rs2         ), // IF/ID.RegisterRs2
   .IF_ID_rd          (IF_ID_rd          ), // IF/ID.RegisterRd
   .pc_sel            (pc_sel            ), // PC select
-  .ctr_sel           (ctr_sel           ), // Control select
+  .ctr_sel           (ctrl_sel          ), // Control select
   .data_out_1        (data_out_1        ), // Data out rs1
   .data_out_2        (data_out_2        ), // Data out rs2
   .imm_out           (imm_out           ), // Immediate out
@@ -332,21 +331,21 @@ stage_WB #(
 forwarding_unit #(
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH)
 ) forwarding_unit (
-  .IF_ID_inst_opcode(IF_ID_inst_opcode), // IF/ID opcode
-  .IF_ID_rs1        (IF_ID_rs1        ), // IF/ID.RegisterRs1
-  .IF_ID_rs2        (IF_ID_rs2        ), // IF/ID.RegisterRs2
-  .ID_EX_reg_wr_en  (ID_EX_reg_wr_en  ), // ID/EX Reg write enable
-  .ID_EX_rs1        (ID_EX_rs1        ), // ID/EX.RegisterRs1
-  .ID_EX_rs2        (ID_EX_rs2        ), // ID/EX.RegisterRs2
-  .ID_EX_rd         (ID_EX_rd         ), // ID/EX.RegisterRd
-  .EX_MEM_reg_wr_en (EX_MEM_reg_wr_en ), // EX/MEM Reg write enable
-  .EX_MEM_rd        (EX_MEM_rd        ), // EX/MEM.RegisterRd
-  .MEM_WB_reg_wr_en (MEM_WB_reg_wr_en ), // MEM/WB Reg write enable
-  .MEM_WB_rd        (MEM_WB_rd        ), // MEM/WB.RegisterRd
-  .forwardA         (forwardA         ), // Forwarding A
-  .forwardB         (forwardB         ), // Forwarding B
-  .forward_comp1    (forward_comp1    ), // Forwarding compare 1
-  .forward_comp2    (forward_comp2    )  // Forwarding compare 2
+  .IF_ID_inst_opcode(IF_ID_inst_opcode     ), // IF/ID opcode
+  .IF_ID_rs1        (IF_ID_rs1             ), // IF/ID.RegisterRs1
+  .IF_ID_rs2        (IF_ID_rs2             ), // IF/ID.RegisterRs2
+  .ID_EX_reg_wr_en  (ID_EX_reg_write_en    ), // ID/EX Reg write enable
+  .ID_EX_rs1        (ID_EX_rs1             ), // ID/EX.RegisterRs1
+  .ID_EX_rs2        (ID_EX_rs2             ), // ID/EX.RegisterRs2
+  .ID_EX_rd         (ID_EX_rd              ), // ID/EX.RegisterRd
+  .EX_MEM_reg_wr_en (EX_MEM_reg_write_en   ), // EX/MEM Reg write enable
+  .EX_MEM_rd        (EX_MEM_rd             ), // EX/MEM.RegisterRd
+  .MEM_WB_reg_wr_en (MEM_WB_reg_write_en   ), // MEM/WB Reg write enable
+  .MEM_WB_rd        (MEM_WB_rd             ), // MEM/WB.RegisterRd
+  .forwardA         (forwardA              ), // Forwarding A
+  .forwardB         (forwardB              ), // Forwarding B
+  .forward_comp1    (forward_comp1         ), // Forwarding compare 1
+  .forward_comp2    (forward_comp2         )  // Forwarding compare 2
 );
 
 

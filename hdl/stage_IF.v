@@ -8,8 +8,8 @@ module stage_IF #(
 (
   input                       clk        , // Clock signal
   input                       reset_n    , // Asynchronous reset
-  input      [PC_WIDTH-1:0  ] wr_addr    , // Write address (write instructions to IMEM)
-  input      [INST_WIDTH-1:0] wr_data    , // Data written (write instructions to IMEM)
+  // input      [PC_WIDTH-1:0  ] wr_addr    , // Write address (write instructions to IMEM)
+  // input      [INST_WIDTH-1:0] wr_data    , // Data written (write instructions to IMEM)
   input      [PC_WIDTH-1:0  ] pc_imm     , // Program counter
   input                       pc_sel     , // PC select
   input                       pc_write   , // PC write
@@ -30,7 +30,7 @@ module stage_IF #(
   //                PC update
   //============================================
 
-  assign pre_pc = pc_sel ? pc_imm : pc_next;
+  assign pre_pc = pc_sel ? pc_imm : (pc+4);
 
   always @(posedge clk or negedge reset_n) begin : proc_pc
     if(~reset_n) begin
@@ -46,7 +46,8 @@ module stage_IF #(
   //                 PC next
   //============================================
 
-  assign pc_next = pc + 4;
+  // assign pc_next = pc + 4;
+  assign pc_next = 4;
 
   //============================================
   //               Instruction
@@ -60,8 +61,8 @@ module stage_IF #(
     .clk    (clk        ),
     .reset_n(reset_n    ),
     .wr_en  (IF_ID_write),
-    .wr_addr(wr_addr    ),
-    .wr_data(wr_data    ),
+    // .wr_addr(wr_addr    ),
+    // .wr_data(wr_data    ),
     .pc     (pc         ),
     .inst   (inst       ) 
   );

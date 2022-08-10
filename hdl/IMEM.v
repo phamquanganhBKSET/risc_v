@@ -10,8 +10,8 @@ module IMEM #(
 	input                       clk    , // Clock signal
 	input                       reset_n, // Asynchronous reset
   input                       wr_en  , // Write enable
-  input      [PC_WIDTH-1:0  ] wr_addr, // Write address
-  input      [INST_WIDTH-1:0] wr_data, // Data written
+  // input      [PC_WIDTH-1:0  ] wr_addr, // Write address
+  // input      [INST_WIDTH-1:0] wr_data, // Data written
 	input      [PC_WIDTH-1:0  ] pc     , // Program counter
 	output reg [INST_WIDTH-1:0] inst     // Instruction
 );

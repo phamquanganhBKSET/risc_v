@@ -1,7 +1,6 @@
 `include "../inc/risc_v_defines.vh"
 
-module riscv 
-#(
+module riscv #(
   parameter REG_WIDTH       = `REG_WIDTH      ,
   parameter INST_WIDTH      = `INST_WIDTH     ,
   parameter IMM_SEL_WIDTH   = `IMM_SEL_WIDTH  ,
@@ -14,10 +13,9 @@ module riscv
   parameter DMEM_DEPTH      = `DMEM_DEPTH      
 )
 (
-	input clk    ,    // Clock
+	input clk    , // Clock
 	input reset_n  // Asynchronous reset active low
 );
-
 
 wire  [PC_WIDTH-1:0      ]     pc_imm             ; // Program counter
 wire                           pc_sel             ; // PC select

@@ -28,7 +28,7 @@ module IMEM #(
 
 
   initial begin
-    $readmemb("../sim/inst.txt", imem);
+    $readmemb(`FILE_PATH, imem);
   end
 
   // always @(posedge clk or negedge reset_n) begin : proc_imem

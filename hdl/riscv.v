@@ -10,7 +10,8 @@ module riscv
   parameter REG_ADDR_WIDTH  = `REG_ADDR_WIDTH ,
   parameter PC_WIDTH        = `PC_WIDTH       ,
   parameter IMEM_DEPTH      = `IMEM_DEPTH     ,
-  parameter NUM_REG         = `NUM_REG        
+  parameter NUM_REG         = `NUM_REG        ,
+  parameter DMEM_DEPTH      = `DMEM_DEPTH      
 )
 (
 	input clk    ,    // Clock
@@ -26,6 +27,7 @@ wire                  IF_ID_write; // IF/ID write
 wire [PC_WIDTH-1:0  ] pc         ; // PC register
 wire [PC_WIDTH-1:0  ] pc_next    ; // PC next
 wire [INST_WIDTH-1:0] inst       ; // Instruction
+wire [PC_WIDTH-1:0  ] wr_addr    ; // Write address (write instructions to IMEM)
 
 stage_IF #(
   .MEM_WIDTH  (MEM_WIDTH  ),
@@ -58,6 +60,8 @@ reg_IF_ID #(
   .INST_WIDTH    (INST_WIDTH     ),
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH )
 ) reg_IF_ID (
+  .clk             (clk               ) , // Clock signal
+  .reset_n         (reset_n           ) , // Asynchronous reset
   .pc               (pc               ), // PC
   .inst             (inst             ), // Instruction
   .IF_ID_pc         (IF_ID_pc         ), // IF_ID_PC
@@ -70,9 +74,7 @@ reg_IF_ID #(
 
 wire  [REG_ADDR_WIDTH-1:0] ID_EX_rd       ; // ID/EX.RegisterRd
 wire                       ctrl_sel       ; // Control select
-wire                       pc_write       ; // PC Write
 wire                       IF_ID_flush    ; // IF/ID Flush
-wire                       IF_ID_write    ; // IF/ID Write
 hazard_detection #(
   .REG_ADDR_WIDTH (REG_ADDR_WIDTH)
 ) hazard_detection (
@@ -92,8 +94,6 @@ wire                           MEM_WB_rd        ; // MEM/WB.RegisterRd
 wire  [REG_WIDTH-1:0     ]     WB_data          ; // WB data
 wire  [REG_WIDTH-1:0     ]     alu_out          ; // ALU out
 wire  [REG_WIDTH-1:0     ]     DMEM_data_out    ; // DMEM data out
-wire  [PC_WIDTH-1:0      ]     pc_imm           ; // PC immediate
-wire                           pc_sel           ; // PC select
 wire  [REG_WIDTH-1:0     ]     data_out_1       ; // Data out rs1
 wire  [REG_WIDTH-1:0     ]     data_out_2       ; // Data out rs2
 wire  [REG_WIDTH-1:0     ]     imm_out          ; // Immediate out
@@ -143,7 +143,6 @@ stage_ID #(
 wire                          br_lt         ;
 wire                          br_eq         ;
 wire      [IMM_SEL_WIDTH-1:0] imm_sel       ;
-wire                          pc_sel        ;
 wire                          br_un         ;
 wire                          mem_write     ;
 
@@ -183,7 +182,8 @@ wire                      ID_EX_BSel        ; // B select
 wire                      ID_EX_wb_sel      ;
 
 reg_ID_EX #(
-  .REG_WIDTH(REG_WIDTH)
+  .REG_WIDTH     (REG_WIDTH     ),
+  .REG_ADDR_WIDTH(REG_ADDR_WIDTH)
 ) reg_ID_EX (
   .clk               (clk               ), // Clock signal
   .reset_n           (reset_n           ), // Asynchronous reset
@@ -218,7 +218,6 @@ reg_ID_EX #(
   .ID_EX_wb_sel      (ID_EX_wb_sel      )  // ID/EX WB select
 );
 
-wire [REG_WIDTH-1:0] alu_out         ; // ALU out
 wire [REG_WIDTH-1:0] dataB           ; // Data B
 
 stage_EX #(
@@ -241,7 +240,6 @@ stage_EX #(
 );
 
 
-wire [REG_WIDTH-1:0     ] EX_MEM_alu_out     ; // ALU out
 wire [REG_WIDTH-1:0     ] EX_MEM_dataB       ; // Data B
 wire [6:0               ] EX_MEM_inst_opcode ; // IF/ID instruction opcode
 wire [REG_ADDR_WIDTH-1:0] EX_MEM_rs1         ; // IF/ID.RegisterRs1
@@ -265,7 +263,7 @@ reg_EX_MEM #(
   .ID_EX_rd           (ID_EX_rd           ), // IF/ID.RegisterRd
   .ID_EX_reg_write_en (ID_EX_reg_write_en ), // ID/EX Reg write enable
   .ID_EX_mem_write_en (ID_EX_mem_write_en ), // ID/EX MEM write enable
-  .ID_EX_wb_sel       (ID_EX_wb_sel       ) // ID/EX WB select
+  .ID_EX_wb_sel       (ID_EX_wb_sel       ), // ID/EX WB select
   .EX_MEM_alu_out     (EX_MEM_alu_out     ), // ALU out
   .EX_MEM_dataB       (EX_MEM_dataB       ), // Data B
   .EX_MEM_inst_opcode (EX_MEM_inst_opcode ), // IF/ID instruction opcode
@@ -273,14 +271,15 @@ reg_EX_MEM #(
   .EX_MEM_rs2         (EX_MEM_rs2         ), // IF/ID.RegisterRs2
   .EX_MEM_rd          (EX_MEM_rd          ), // IF/ID.RegisterRd
   .EX_MEM_reg_write_en(EX_MEM_reg_write_en), // ID/EX Reg write enable
-  .EX_MEM_mem_write_en(EX_MEM_mem_write_en)  // ID/EX MEM write enable
+  .EX_MEM_mem_write_en(EX_MEM_mem_write_en), // ID/EX MEM write enable
   .EX_MEM_wb_sel      (EX_MEM_wb_sel      )  // ID/EX WB select
 );
 
 stage_MEM  #(
   .MEM_WIDTH      (MEM_WIDTH      ),
   .DMEM_ADDR_WIDTH(DMEM_ADDR_WIDTH),
-  .REG_WIDTH      (REG_WIDTH      ) 
+  .REG_WIDTH      (REG_WIDTH      ),
+  .DMEM_DEPTH     (DMEM_DEPTH     )
 ) stage_MEM (
   .clk                (clk                ),    // Clock
   .reset_n            (reset_n            ),  // Asynchronous reset active low
@@ -296,7 +295,6 @@ wire [REG_WIDTH-1:0     ] MEM_WB_dataB       ; // Data B
 wire [6:0               ] MEM_WB_inst_opcode ; // IF/ID instruction opcode
 wire [REG_ADDR_WIDTH-1:0] MEM_WB_rs1         ; // IF/ID.RegisterRs1
 wire [REG_ADDR_WIDTH-1:0] MEM_WB_rs2         ; // IF/ID.RegisterRs2
-wire [REG_ADDR_WIDTH-1:0] MEM_WB_rd          ; // IF/ID.RegisterRd
 wire                      MEM_WB_reg_write_en; // ID/EX Reg write enable
 wire                      MEM_WB_reg_wb_sel  ;
 
@@ -313,7 +311,8 @@ reg_MEM_WB #(
   .EX_MEM_rs2         (EX_MEM_rs2         ), // IF/ID.RegisterRs2
   .EX_MEM_rd          (EX_MEM_rd          ), // IF/ID.RegisterRd
   .EX_MEM_reg_write_en(EX_MEM_reg_write_en), // ID/EX Reg write enable
-  .EX_MEM_wb_sel      (EX_MEM_wb_sel      )  // ID/EX WB select
+  .EX_MEM_wb_sel      (EX_MEM_wb_sel      ), // ID/EX WB select
+  .EX_MEM_alu_out     (EX_MEM_alu_out     ),
   .MEM_WB_alu_out     (MEM_WB_alu_out     ), // ALU out
   .MEM_WB_dataB       (MEM_WB_dataB       ), // Data B
   .MEM_WB_inst_opcode (MEM_WB_inst_opcode ), // IF/ID instruction opcode

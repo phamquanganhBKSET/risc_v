@@ -1,7 +1,8 @@
 `include "../inc/risc_v_defines.vh"
 
 module reg_ID_EX #(
-  parameter REG_WIDTH = `REG_WIDTH
+  parameter REG_WIDTH      = `REG_WIDTH     ,
+  parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH
 )
 (
   input                           clk               , // Clock signal
@@ -21,10 +22,10 @@ module reg_ID_EX #(
   input                           ASel              , // A select
   input                           BSel              , // B select
   input                           wb_sel            , // WB select
-  output     [6:0               ] ID_EX_inst_opcode , // IF/ID instruction opcode
-  output     [REG_ADDR_WIDTH-1:0] ID_EX_rs1         , // IF/ID.RegisterRs1
-  output     [REG_ADDR_WIDTH-1:0] ID_EX_rs2         , // IF/ID.RegisterRs2
-  output     [REG_ADDR_WIDTH-1:0] ID_EX_rd          , // IF/ID.RegisterRd
+  output reg [6:0               ] ID_EX_inst_opcode , // IF/ID instruction opcode
+  output reg [REG_ADDR_WIDTH-1:0] ID_EX_rs1         , // IF/ID.RegisterRs1
+  output reg [REG_ADDR_WIDTH-1:0] ID_EX_rs2         , // IF/ID.RegisterRs2
+  output reg [REG_ADDR_WIDTH-1:0] ID_EX_rd          , // IF/ID.RegisterRd
   output reg                      ID_EX_pc_sel      , // ID/EX PC select
   output reg [REG_WIDTH-1:0     ] ID_EX_data_out_1  , // ID/EX Data rs1
   output reg [REG_WIDTH-1:0     ] ID_EX_data_out_2  , // ID/EX Data rs2

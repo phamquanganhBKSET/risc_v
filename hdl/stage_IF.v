@@ -37,7 +37,7 @@ module stage_IF #(
       pc <= 0;
     end else begin
       if (pc_write) begin
-        pc = pre_pc
+        pc = pre_pc;
       end
     end
   end

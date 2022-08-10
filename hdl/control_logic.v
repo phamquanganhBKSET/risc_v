@@ -67,21 +67,21 @@ always @(*) begin
 
 				end
 				{`AND_FUNCT3, `AND_FUNCT7}: begin
-					alu_sel         = 3'b100 // And
+					alu_sel         = 3'b100; // And
 				end
 
 				{`SLL_FUNCT3, `SLL_FUNCT7}: begin
 					alu_sel         = 3'b101; // Sll
 				end
 
-				{`SRL_FUNCT3, `SRLD_FUNCT7}: begin
+				{`SRL_FUNCT3, `SRL_FUNCT7}: begin
 					alu_sel         = 3'b110; // Srl
 				end
 
 				{`SRA_FUNCT3, `SRA_FUNCT7}: begin
 					alu_sel         = 3'b111; // Sra
 				end
-				default : /* default */;
+				default : 
 					alu_sel         = 0; // Add Mem
 			endcase
 		end
@@ -96,7 +96,6 @@ always @(*) begin
 			pc_sel          = 0; // +4
 			br_un           = 0;
 			alu_sel         = 0; // Add I
-			endcase
 		end
 
 		I_MATH_OPCODE: begin
@@ -112,10 +111,9 @@ always @(*) begin
 				{`ADDI_FUNCT3}: begin
 					alu_sel         = 3'b000; // Add Mem
 				end
-				{`SUBI_FUNCT3}: begin
-					alu_sel         = 3'b001; // Add Mem
-
-				end
+				// {`SUBI_FUNCT3}: begin
+				// 	alu_sel         = 3'b001; // Add Mem
+				// end
 				{`XORI_FUNCT3}: begin
 					alu_sel         = 3'b010; // Add Mem
 
@@ -125,7 +123,7 @@ always @(*) begin
 
 				end
 				{`ANDI_FUNCT3}: begin
-					alu_sel         = 3'b100 // Add Mem
+					alu_sel         = 3'b100;// Add Mem
 				end
 
 				{`SLLI_FUNCT3}: begin
@@ -139,8 +137,10 @@ always @(*) begin
 				{`SRAI_FUNCT3}: begin
 					alu_sel         = 3'b111; // Add Mem
 				end
-				default : /* default */;
+				default : begin
 					alu_sel         = 0; // Add Mem
+				end
+			endcase
 		end
 
 		S_OPCODE: begin

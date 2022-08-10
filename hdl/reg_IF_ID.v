@@ -6,6 +6,8 @@ module reg_IF_ID #(
   parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH
 )
 (
+  input                           clk               , // Clock signal
+  input                           reset_n           , // Asynchronous reset
   input      [PC_WIDTH-1:0      ] pc               , // PC
   input      [INST_WIDTH-1:0    ] inst             , // Instruction
   output reg [PC_WIDTH-1:0      ] IF_ID_pc         , // IF_ID_PC
@@ -20,8 +22,8 @@ module reg_IF_ID #(
   //                  IF/ID PC
   //============================================
 
-  always @(posedge clk or negedge rst_n) begin : proc_IF_ID_pc
-    if(~rst_n) begin
+  always @(posedge clk or negedge reset_n) begin : proc_IF_ID_pc
+    if(~reset_n) begin
       IF_ID_pc <= 0;
     end else begin
       IF_ID_pc <= pc;
@@ -32,8 +34,8 @@ module reg_IF_ID #(
   //             IF/ID Instruction
   //============================================
 
-  always @(posedge clk or negedge rst_n) begin : proc_IF_ID_inst
-    if(~rst_n) begin
+  always @(posedge clk or negedge reset_n) begin : proc_IF_ID_inst
+    if(~reset_n) begin
       IF_ID_inst <= 0;
     end else begin
       IF_ID_inst <= inst;

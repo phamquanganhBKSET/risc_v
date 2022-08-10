@@ -114,36 +114,37 @@ module stage_ID #(
   //          Data out rs1 and data out rs2
   //============================================
 
-  always @(*) begin : proc_data_out_rs1
-    data_out_rs1 = 0;
+  always @(*) begin : proc_data_out_1
+    data_out_1 = 0;
     case (forward_comp1)
       2'b00: begin
-        data_out_rs1 = data_rs1;
+        data_out_1 = data_rs1;
       end
 
       2'b01: begin
-        data_out_rs1 = alu_out;
+        data_out_1 = alu_out;
       end
 
       2'b10: begin
-        data_out_rs1 = DMEM_data_out;
+        data_out_1 = DMEM_data_out;
       end
     endcase
   end
 
-  always @(*) begin : proc_data_out_rs2
-    data_out_rs2 = 0;
+  always @(*) begin : proc_data_out_2
+    data_out_2 = 0;
     case (forward_comp2)
       2'b00: begin
-        data_out_rs2 = data_rs2;
+        data_out_2 = data_rs2;
       end
 
       2'b01: begin
-        data_out_rs2 = alu_out;
+        data_out_2 = alu_out;
       end
 
       2'b10: begin
-        data_out_rs2 = DMEM_data_out;
+        data_out_2 = DMEM_data_out;
+      end
     endcase
   end
 
@@ -155,8 +156,8 @@ module stage_ID #(
     .REG_WIDTH(REG_WIDTH)
   ) branch_comp_inst (
       .br_un   (br_un       ),
-      .data_rs1(data_out_rs1),
-      .data_rs2(data_out_rs2),
+      .data_rs1(data_out_1),
+      .data_rs2(data_out_2),
       .br_eq   (br_eq       ),
       .br_lt   (br_lt       ) 
   );

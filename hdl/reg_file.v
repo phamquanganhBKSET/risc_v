@@ -6,15 +6,15 @@ module reg_file #(
   parameter REG_WIDTH      = `REG_WIDTH      
 )
 (
-  input                       clk     , // Clock signal
-  input                       reset_n , // Asynchronous reset
-  input                       wr_en   , // Write enable: if wr_en == 1 then write, else read
-  input  [REG_ADDR_WIDTH-1:0] addr_rs1, // Address rs1
-  input  [REG_ADDR_WIDTH-1:0] addr_rs2, // Address rs2
-  input  [REG_ADDR_WIDTH-1:0] addr_rd , // Address rd
-  input  [REG_WIDTH-1:0     ] data_rd , // Data rd
-  output [REG_WIDTH-1:0     ] data_rs1, // Data rs1
-  output [REG_WIDTH-1:0     ] data_rs2  // Data rs2
+  input                           clk     , // Clock signal
+  input                           reset_n , // Asynchronous reset
+  input                           wr_en   , // Write enable: if wr_en == 1 then write, else read
+  input      [REG_ADDR_WIDTH-1:0] addr_rs1, // Address rs1
+  input      [REG_ADDR_WIDTH-1:0] addr_rs2, // Address rs2
+  input      [REG_ADDR_WIDTH-1:0] addr_rd , // Address rd
+  input      [REG_WIDTH-1:0     ] data_rd , // Data rd
+  output reg [REG_WIDTH-1:0     ] data_rs1, // Data rs1
+  output reg [REG_WIDTH-1:0     ] data_rs2  // Data rs2
 );
 
   //============================================

@@ -1,3 +1,5 @@
+`include "../inc/risc_v_defines.vh"
+
 module stage_WB #(
   parameter REG_WIDTH = `REG_WIDTH
 )(

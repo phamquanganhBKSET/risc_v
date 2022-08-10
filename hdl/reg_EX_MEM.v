@@ -15,7 +15,7 @@ module reg_EX_MEM #(
   input  [REG_ADDR_WIDTH-1:0]     ID_EX_rd           , // IF/ID.RegisterRd
   input                           ID_EX_reg_write_en , // ID/EX Reg write enable
   input                           ID_EX_mem_write_en , // ID/EX MEM write enable
-  input                           ID_EX_wb_sel        // ID/EX WB select
+  input                           ID_EX_wb_sel       ,// ID/EX WB select
   output reg [REG_WIDTH-1:0     ] EX_MEM_alu_out     , // ALU out
   output reg [REG_WIDTH-1:0     ] EX_MEM_dataB       , // Data B
   output reg [6:0               ] EX_MEM_inst_opcode , // IF/ID instruction opcode
@@ -23,7 +23,7 @@ module reg_EX_MEM #(
   output reg [REG_ADDR_WIDTH-1:0] EX_MEM_rs2         , // IF/ID.RegisterRs2
   output reg [REG_ADDR_WIDTH-1:0] EX_MEM_rd          , // IF/ID.RegisterRd
   output reg                      EX_MEM_reg_write_en, // ID/EX Reg write enable
-  output reg                      EX_MEM_mem_write_en  // ID/EX MEM write enable
+  output reg                      EX_MEM_mem_write_en, // ID/EX MEM write enable
   output reg                      EX_MEM_wb_sel        // ID/EX WB select
 );
   

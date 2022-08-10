@@ -14,7 +14,8 @@ module reg_MEM_WB #(
   input      [REG_ADDR_WIDTH-1:0] EX_MEM_rs2         , // IF/ID.RegisterRs2
   input      [REG_ADDR_WIDTH-1:0] EX_MEM_rd          , // IF/ID.RegisterRd
   input                           EX_MEM_reg_write_en, // ID/EX Reg write enable
-  input                           EX_MEM_wb_sel        // ID/EX WB select
+  input                           EX_MEM_wb_sel      , // ID/EX WB select
+  input      [REG_WIDTH-1:0     ] EX_MEM_alu_out     , // ALU out
   output reg [REG_WIDTH-1:0     ] MEM_WB_alu_out     , // ALU out
   output reg [REG_WIDTH-1:0     ] MEM_WB_dataB       , // Data B
   output reg [6:0               ] MEM_WB_inst_opcode , // IF/ID instruction opcode
@@ -27,13 +28,13 @@ module reg_MEM_WB #(
 
   always @(posedge clk or negedge reset_n) begin
     if(~reset_n) begin
-      EX_MEM_alu_out      <= 0;
-      EX_MEM_dataB        <= 0;
-      EX_MEM_inst_opcode  <= 0;
-      EX_MEM_rs1          <= 0;
-      EX_MEM_rs2          <= 0;
-      EX_MEM_rd           <= 0;
-      EX_MEM_reg_write_en <= 0;
+      MEM_WB_alu_out      <= 0;
+      MEM_WB_dataB        <= 0;
+      MEM_WB_inst_opcode  <= 0;
+      MEM_WB_rs1          <= 0;
+      MEM_WB_rs2          <= 0;
+      MEM_WB_rd           <= 0;
+      MEM_WB_reg_write_en <= 0;
       MEM_WB_reg_wb_sel   <= 0;
     end else begin
       MEM_WB_alu_out      <= EX_MEM_alu_out     ;

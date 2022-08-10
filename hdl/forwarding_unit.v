@@ -25,13 +25,13 @@ module forwarding_unit #(
   //      Internal signals and variables
   //============================================
 
-  wire brach_inst; // Check if instruction is branch type
+  wire branch_inst; // Check if instruction is branch type
 
   //============================================
   //                Check opcode
   //============================================
 
-  assign brach_inst = (IF_ID_inst_opcode == 7'b1100111);
+  assign branch_inst = (IF_ID_inst_opcode == 7'b1100111);
 
   //============================================
   //            Forwarding compare 1

@@ -18,6 +18,8 @@ module reg_ID_EX #(
   input                           reg_write_en      , // Reg write enable
   input      [2:0               ] alu_sel           , // ALU select
   input                           mem_write_en      , // MEM write enable
+  input                           ASel              , // A select
+  input                           BSel              , // B select
   input                           wb_sel            , // WB select
   input      [6:0               ] ID_EX_inst_opcode , // IF/ID instruction opcode
   input      [REG_ADDR_WIDTH-1:0] ID_EX_rs1         , // IF/ID.RegisterRs1
@@ -30,6 +32,8 @@ module reg_ID_EX #(
   output reg                      ID_EX_reg_write_en, // ID/EX Reg write enable
   output reg [2:0               ] ID_EX_alu_sel     , // ID/EX ALU select
   output reg                      ID_EX_mem_write_en, // ID/EX MEM write enable
+  output                          ID_EX_ASel        , // A select
+  output                          ID_EX_BSel        , // B select
   output reg                      ID_EX_wb_sel        // ID/EX WB select
 );
 
@@ -42,6 +46,8 @@ module reg_ID_EX #(
       ID_EX_reg_write_en <= 0;
       ID_EX_alu_sel      <= 0;
       ID_EX_mem_write_en <= 0;
+      ID_EX_ASel         <= 0;
+      ID_EX_BSel         <= 0;
       ID_EX_wb_sel       <= 0;
     end else begin
       ID_EX_pc_sel       <= ctr_sel ? pc_sel       : 0;
@@ -51,6 +57,8 @@ module reg_ID_EX #(
       ID_EX_reg_write_en <= ctr_sel ? reg_write_en : 0;
       ID_EX_alu_sel      <= ctr_sel ? alu_sel      : 0;
       ID_EX_mem_write_en <= ctr_sel ? mem_write_en : 0;
+      ID_EX_ASel         <= ctr_sel ? ASel         : 0;
+      ID_EX_BSel         <= ctr_sel ? BSel         : 0;
       ID_EX_wb_sel       <= ctr_sel ? wb_sel       : 0;
     end
   end

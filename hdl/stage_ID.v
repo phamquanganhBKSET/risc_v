@@ -31,6 +31,8 @@ module stage_ID #(
   output                          reg_write_en     , // Reg write enable
   output     [2:0               ] alu_sel          , // ALU select
   output                          mem_write_en     , // MEM write enable
+  output                          ASel             , // A select
+  output                          BSel             , // B select
   output                          wb_sel             // WB select
 );
   
@@ -102,6 +104,8 @@ module stage_ID #(
       .reg_write_en  (reg_write_en  ),
       .pc_sel        (pc_sel        ),
       .br_un         (br_un         ),
+      .ASel          (ASel          ),
+      .BSel          (BSel          ),
       .alu_sel       (alu_sel       ),
       .mem_write     (mem_write_en  ),
       .wb_sel        (wb_sel        ) 

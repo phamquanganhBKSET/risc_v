@@ -14,6 +14,8 @@ module control_logic #(
 	output reg        						 reg_write_en  ,
 	output reg     						 	   pc_sel        ,
 	output reg     						 	   br_un         ,
+	output reg        						 ASel          ,
+	output reg        						 BSel          ,
 	output reg [2:0						 	 ] alu_sel       ,
 	output reg     						 	   mem_write     ,
 	output reg     						 	   wb_sel         
@@ -42,6 +44,8 @@ always @(*) begin
 		R_OPCODE: begin
 			imm_sel         = `IMM_SEL_R;
 			reg_write_en 		= 1;
+			ASel            = 0; // Reg
+			BSel            = 0; // Reg
 			mem_write       = 0;
 			wb_sel          = 1; // alu
 			pc_sel          = 0;	// +4
@@ -85,6 +89,8 @@ always @(*) begin
 		I_LOAD_OPCODE: begin
 			imm_sel         = `IMM_SEL_I;
 			reg_write_en    = 1; // MEM
+			ASel            = 0; // Reg
+			BSel            = 1; // Imm
 			mem_write       = 0; // Read
 			wb_sel          = 0; // Mem
 			pc_sel          = 0; // +4
@@ -96,6 +102,8 @@ always @(*) begin
 		I_MATH_OPCODE: begin
 			imm_sel         = `IMM_SEL_I;
 			reg_write_en  	= 1; // 0
+			ASel           = 0; // Reg
+			BSel           = 1; // Imm
 			mem_write       = 0; // Read
 			wb_sel          = 1; // ALU
 			pc_sel          = 0; // + 4
@@ -137,7 +145,9 @@ always @(*) begin
 
 		S_OPCODE: begin
 			imm_sel         = `IMM_SEL_S;
-			reg_write_en  	= 0; 
+			reg_write_en  	= 0;
+			ASel            = 0; // reg
+			BSel            = 1; // Imm
 			alu_sel         = 0; // add
 			mem_write       = 1; // write
 			wb_sel          = 0;
@@ -168,6 +178,8 @@ always @(*) begin
 			endcase
 			imm_sel         = `IMM_SEL_B;
 			reg_write_en  	= 0;
+			ASel            = 0;
+			BSel            = 0;
 			alu_sel         = 0;
 			mem_write       = 0;
 			wb_sel          = 0;
@@ -177,6 +189,8 @@ always @(*) begin
 		default : begin
 			imm_sel         = `IMM_SEL_R;
 			reg_write_en  	= 0;
+			ASel            = 0;
+			BSel            = 0;
 			alu_sel         = 0;
 			mem_write       = 0;
 			wb_sel          = 0;

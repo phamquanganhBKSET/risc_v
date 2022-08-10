@@ -32,8 +32,8 @@ module reg_ID_EX #(
   output reg                      ID_EX_reg_write_en, // ID/EX Reg write enable
   output reg [2:0               ] ID_EX_alu_sel     , // ID/EX ALU select
   output reg                      ID_EX_mem_write_en, // ID/EX MEM write enable
-  output                          ID_EX_ASel        , // A select
-  output                          ID_EX_BSel        , // B select
+  output reg                      ID_EX_ASel        , // A select
+  output reg                      ID_EX_BSel        , // B select
   output reg                      ID_EX_wb_sel        // ID/EX WB select
 );
 

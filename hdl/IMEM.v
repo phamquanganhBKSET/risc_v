@@ -3,7 +3,8 @@
 module IMEM #(
   parameter MEM_WIDTH  = `MEM_WIDTH ,
   parameter PC_WIDTH   = `PC_WIDTH  ,
-  parameter INST_WIDTH = `INST_WIDTH        
+  parameter INST_WIDTH = `INST_WIDTH,
+  parameter IMEM_DEPTH = `IMEM_DEPTH        
 )
 (
 	input                   clk    , // Clock signal
@@ -25,14 +26,19 @@ module IMEM #(
   //               Write to IMEM
   //============================================
 
-  always @(posedge clk or negedge reset_n) begin : proc_imem
-    if(wr_en)
-      imem[wr_addr  ] <= wr_data[7 :0 ];
-      imem[wr_addr+1] <= wr_data[15:8 ];
-      imem[wr_addr+2] <= wr_data[23:16];
-      imem[wr_addr+3] <= wr_data[31:24];
-    end
+
+  initial begin
+    $readmemb("filename.txt", imem);
   end
+
+  // always @(posedge clk or negedge reset_n) begin : proc_imem
+  //   if(wr_en)
+  //     imem[wr_addr  ] <= wr_data[7 :0 ];
+  //     imem[wr_addr+1] <= wr_data[15:8 ];
+  //     imem[wr_addr+2] <= wr_data[23:16];
+  //     imem[wr_addr+3] <= wr_data[31:24];
+  //   end
+  // end
 
   //============================================
   //              Read from IMEM

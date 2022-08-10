@@ -14,7 +14,7 @@ module riscv
 )
 (
 	input clk    ,    // Clock
-	input reset_n,  // Asynchronous reset active low
+	input reset_n  // Asynchronous reset active low
 );
 
 

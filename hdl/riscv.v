@@ -103,7 +103,6 @@ stage_IF #(
   .pc_imm     (pc_imm     ),
   .pc_sel     (pc_sel     ),
   .pc_write   (pc_write   ),
-  .IF_flush   (IF_ID_flush),
   .IF_ID_write(IF_ID_write),
   .pc         (pc         ),
   .pc_next    (pc_next    ),
@@ -115,8 +114,9 @@ reg_IF_ID #(
   .INST_WIDTH    (INST_WIDTH     ),
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH )
 ) reg_IF_ID (
-  .clk             (clk               ) , // Clock signal
-  .reset_n         (reset_n           ) , // Asynchronous reset
+  .clk              (clk              ), // Clock signal
+  .reset_n          (reset_n          ), // Asynchronous reset
+  .IF_flush         (IF_ID_flush      ),
   .pc               (pc               ), // PC
   .inst             (inst             ), // Instruction
   .IF_ID_pc         (IF_ID_pc         ), // IF_ID_PC
@@ -130,14 +130,15 @@ reg_IF_ID #(
 hazard_detection #(
   .REG_ADDR_WIDTH (REG_ADDR_WIDTH)
 ) hazard_detection (
-  .IF_ID_rs1      (IF_ID_rs1         ), // IF/ID.RegisterRs1
-  .IF_ID_rs2      (IF_ID_rs2         ), // IF/ID.RegisterRs2
-  .ID_EX_rd       (ID_EX_rd          ), // ID/EX.RegisterRd
-  .ID_EX_mem_wr_en(ID_EX_mem_write_en), // ID/EX Mem write enable
-  .ctrl_sel       (ctrl_sel          ), // Control select
-  .pc_write       (pc_write          ), // PC Write
-  .IF_ID_flush    (IF_ID_flush       ), // IF/ID Flush
-  .IF_ID_write    (IF_ID_write       )  // IF/ID Write
+  .IF_ID_inst_opcode(IF_ID_inst_opcode ), // IF/ID Instruction opcode
+  .IF_ID_rs1        (IF_ID_rs1         ), // IF/ID.RegisterRs1
+  .IF_ID_rs2        (IF_ID_rs2         ), // IF/ID.RegisterRs2
+  .ID_EX_rd         (ID_EX_rd          ), // ID/EX.RegisterRd
+  .ID_EX_mem_wr_en  (ID_EX_mem_write_en), // ID/EX Mem write enable
+  .ctrl_sel         (ctrl_sel          ), // Control select
+  .pc_write         (pc_write          ), // PC Write
+  .IF_ID_flush      (IF_ID_flush       ), // IF/ID Flush
+  .IF_ID_write      (IF_ID_write       )  // IF/ID Write
 );
 
 
@@ -283,9 +284,9 @@ stage_MEM  #(
   .REG_WIDTH      (REG_WIDTH      ),
   .DMEM_DEPTH     (DMEM_DEPTH     )
 ) stage_MEM (
-  .clk                (clk                ),    // Clock
-  .reset_n            (reset_n            ),  // Asynchronous reset active low
-  .EX_MEM_mem_write_en(EX_MEM_mem_write_en),// ID/EX MEM write enable
+  .clk                (clk                ), // Clock
+  .reset_n            (reset_n            ), // Asynchronous reset active low
+  .EX_MEM_mem_write_en(EX_MEM_mem_write_en), // ID/EX MEM write enable
   .EX_MEM_alu_out     (EX_MEM_alu_out     ), // ALU out
   .EX_MEM_dataB       (EX_MEM_dataB       ), // Data B
   .DMEM_data_out      (DMEM_data_out      )  // ALU out

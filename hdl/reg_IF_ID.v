@@ -6,8 +6,9 @@ module reg_IF_ID #(
   parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH
 )
 (
-  input                           clk               , // Clock signal
-  input                           reset_n           , // Asynchronous reset
+  input                           clk              , // Clock signal
+  input                           reset_n          , // Asynchronous reset
+  input                           IF_flush         , // IF flush
   input      [PC_WIDTH-1:0      ] pc               , // PC
   input      [INST_WIDTH-1:0    ] inst             , // Instruction
   output reg [PC_WIDTH-1:0      ] IF_ID_pc         , // IF_ID_PC
@@ -26,7 +27,11 @@ module reg_IF_ID #(
     if(~reset_n) begin
       IF_ID_pc <= 0;
     end else begin
-      IF_ID_pc <= pc;
+      if (IF_flush) begin
+        IF_ID_pc <= 0;
+      end else begin
+        IF_ID_pc <= pc;
+      end
     end
   end
 

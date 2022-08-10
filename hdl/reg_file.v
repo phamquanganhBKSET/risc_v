@@ -27,7 +27,13 @@ module reg_file #(
   //         Write to Register File
   //============================================
 
+  integer i;
   always @(posedge clk or negedge reset_n) begin : proc_regs
+    if (~reset_n) begin
+      for (i = 0; i < NUM_REG; i = i + 1) begin
+        regs[i] <= i;
+      end
+    end
     if (wr_en) begin
       regs[addr_rd] <= data_rd;
     end

@@ -55,7 +55,7 @@ module stage_EX #(
     dataB = 0;
     case (forwardB)
       2'b00: begin
-        dataB = ID_EX_data_out_1;
+        dataB = ID_EX_data_out_2;
       end
 
       2'b01: begin

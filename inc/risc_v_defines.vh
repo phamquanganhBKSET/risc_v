@@ -1,6 +1,6 @@
 `define FILE_PATH       "..\\tb\\inst.txt"
 `define INST_WIDTH      32
-`define REG_WIDTH       5'd32
+`define REG_WIDTH       32
 `define NUM_REG         32
 `define MEM_WIDTH       8
 `define IMM_WIDTH       12

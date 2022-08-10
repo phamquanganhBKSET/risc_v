@@ -46,8 +46,7 @@ module stage_IF #(
   //                 PC next
   //============================================
 
-  // assign pc_next = pc + 4;
-  assign pc_next = 4;
+  assign pc_next = pc + 4;
 
   //============================================
   //               Instruction

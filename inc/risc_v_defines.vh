@@ -8,8 +8,8 @@
 `define IMEM_DEPTH      (1<<10)
 `define DMEM_DEPTH      (1<<10)
 `define REG_ADDR_WIDTH  $clog2(`NUM_REG)
-`define PC_WIDTH        `REG_WIDTH
-`define DMEM_ADDR_WIDTH `REG_WIDTH
+`define PC_WIDTH        32
+`define DMEM_ADDR_WIDTH 32
 `define IMM_SEL_R       3'b000
 `define IMM_SEL_I       3'b001
 `define IMM_SEL_S       3'b010

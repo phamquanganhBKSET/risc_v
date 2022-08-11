@@ -7,13 +7,12 @@ module stage_WB #(
   input                           reset_n            ,  // Asynchronous reset active low
   input                           MEM_WB_reg_wb_sel  ,   
   input      [REG_WIDTH-1:0     ] MEM_WB_alu_out     ,  // ALU out
-  input      [REG_WIDTH-1:0     ] EX_MEM_alu_out     ,  // ALU out
-  input                           EX_MEM_reg_write_en,  // ID/EX Reg write enable
+  input      [REG_WIDTH-1:0     ] MEM_WB_data_out    ,  // DMEM data out
   output reg [REG_WIDTH-1:0     ] WB_data               // wb_data to register file
 );
 
 always @(*) begin
-  WB_data = MEM_WB_reg_wb_sel ? MEM_WB_alu_out : EX_MEM_alu_out;
+  WB_data = MEM_WB_reg_wb_sel ? MEM_WB_alu_out : MEM_WB_data_out;
 
 end
 

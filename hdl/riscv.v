@@ -84,6 +84,7 @@ wire                           ID_EX_ASel         ; // A select
 wire                           ID_EX_BSel         ; // B select
 wire                           ID_EX_wb_sel       ;
 wire [REG_WIDTH-1:0     ]      MEM_WB_alu_out     ; // ALU out
+wire [REG_WIDTH-1:0     ]      MEM_WB_data_out    ; // DMEM data out
 wire [REG_WIDTH-1:0     ]      MEM_WB_dataB       ; // Data B
 wire [6:0               ]      MEM_WB_inst_opcode ; // IF/ID instruction opcode
 wire [REG_ADDR_WIDTH-1:0]      MEM_WB_rs1         ; // IF/ID.RegisterRs1
@@ -130,7 +131,7 @@ reg_IF_ID #(
 hazard_detection #(
   .REG_ADDR_WIDTH (REG_ADDR_WIDTH)
 ) hazard_detection (
-  .IF_ID_inst_opcode(IF_ID_inst_opcode ), // IF/ID Instruction opcode
+  .ID_EX_inst_opcode(ID_EX_inst_opcode ), // IF/ID Instruction opcode
   .IF_ID_rs1        (IF_ID_rs1         ), // IF/ID.RegisterRs1
   .IF_ID_rs2        (IF_ID_rs2         ), // IF/ID.RegisterRs2
   .ID_EX_rd         (ID_EX_rd          ), // ID/EX.RegisterRd
@@ -308,6 +309,7 @@ reg_MEM_WB #(
   .EX_MEM_wb_sel      (EX_MEM_wb_sel      ), // ID/EX WB select
   .EX_MEM_alu_out     (EX_MEM_alu_out     ),
   .MEM_WB_alu_out     (MEM_WB_alu_out     ), // ALU out
+  .MEM_WB_data_out    (MEM_WB_data_out    ), // DMEM data out
   .MEM_WB_dataB       (MEM_WB_dataB       ), // Data B
   .MEM_WB_inst_opcode (MEM_WB_inst_opcode ), // IF/ID instruction opcode
   .MEM_WB_rs1         (MEM_WB_rs1         ), // IF/ID.RegisterRs1
@@ -324,8 +326,7 @@ stage_WB #(
   .reset_n            (reset_n            ),  // Asynchronous reset active low
   .MEM_WB_reg_wb_sel  (MEM_WB_reg_wb_sel  ),   
   .MEM_WB_alu_out     (MEM_WB_alu_out     ),  // ALU out
-  .EX_MEM_alu_out     (EX_MEM_alu_out     ),  // ALU out
-  .EX_MEM_reg_write_en(EX_MEM_reg_write_en),  // ID/EX Reg write enable
+  .MEM_WB_data_out    (MEM_WB_data_out    ),  // DMEM data out
   .WB_data            (WB_data            )   // wb_data to register file
 );
 

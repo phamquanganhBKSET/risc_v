@@ -26,9 +26,14 @@ module DMEM #(
   //               Write to DMEM
   //============================================
 
+  integer i;
   always @(posedge clk or negedge reset_n) begin : proc_dmem
-    if (wr_en) begin
-      {dmem[addr], dmem[addr+1], dmem[addr+2], dmem[addr+3]} <= wr_data;
+    if (~reset_n) begin
+      for (i = 0; i < DMEM_DEPTH; i = i + 4) begin
+        {dmem[i+3], dmem[i+2], dmem[i+1], dmem[i]} <= i / 4;
+      end
+    end else if (wr_en) begin
+      {dmem[addr+3], dmem[addr+2], dmem[addr+1], dmem[addr]} <= wr_data;
     end
   end
 
@@ -36,11 +41,15 @@ module DMEM #(
   //              Read from DMEM
   //============================================
 
-  always @(posedge clk or negedge reset_n) begin : proc_data_out
+  always @(negedge clk or negedge reset_n) begin : proc_data_out
     if(~reset_n) begin
       data_out <= 0;
     end else begin
-      data_out <= {dmem[addr + 3], dmem[addr + 2], dmem[addr + 1], dmem[addr]}; // Little endian
+      if (!wr_en) begin
+        data_out <= {dmem[addr + 3], dmem[addr + 2], dmem[addr + 1], dmem[addr]}; // Little endian
+      end else begin
+        data_out <= 0;
+      end
     end
   end
 

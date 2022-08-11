@@ -24,7 +24,8 @@ module stage_EX #(
   //        Internal signals and variables
   //============================================
 
-  reg [REG_WIDTH-1:0] dataA;
+  reg  [REG_WIDTH-1:0] dataA;
+  wire [REG_WIDTH-1:0] alu_in_B;
 
   //============================================
   //                    Data A
@@ -72,12 +73,14 @@ module stage_EX #(
   //                     ALU
   //============================================
 
+  assign alu_in_B = ID_EX_BSel ? ID_EX_imm_out : dataB;
+
   alu #(
     .REG_WIDTH(REG_WIDTH)
   ) alu_inst (
     .alu_sel(ID_EX_alu_sel),
     .dataA  (dataA        ),
-    .dataB  (dataB        ),
+    .dataB  (alu_in_B     ),
     .alu_out(alu_out      ) 
   );
 

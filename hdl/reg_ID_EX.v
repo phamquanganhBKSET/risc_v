@@ -52,9 +52,9 @@ module reg_ID_EX #(
       ID_EX_wb_sel       <= 0;
     end else begin
       ID_EX_pc_sel       <= ctr_sel ? pc_sel       : 0;
-      ID_EX_data_out_1   <= data_out_1                ;
-      ID_EX_data_out_2   <= data_out_2                ;
-      ID_EX_imm_out      <= imm_out                   ;
+      ID_EX_data_out_1   <= ctr_sel ? data_out_1   : 0;
+      ID_EX_data_out_2   <= ctr_sel ? data_out_2   : 0;
+      ID_EX_imm_out      <= ctr_sel ? imm_out      : 0;
       ID_EX_reg_write_en <= ctr_sel ? reg_write_en : 0;
       ID_EX_alu_sel      <= ctr_sel ? alu_sel      : 0;
       ID_EX_mem_write_en <= ctr_sel ? mem_write_en : 0;

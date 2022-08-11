@@ -44,11 +44,13 @@ module IMEM #(
   //              Read from IMEM
   //============================================
 
-  always @(posedge clk or negedge reset_n) begin : proc_inst
+  always @(negedge clk or negedge reset_n) begin : proc_inst
     if(~reset_n) begin
       inst <= 0;
     end else begin
-      inst <= {imem[pc + 3], imem[pc + 2], imem[pc + 1], imem[pc]}; // Little endian
+      if (!wr_en) begin
+        inst <= {imem[pc + 3], imem[pc + 2], imem[pc + 1], imem[pc]}; // Little endian
+      end
     end
   end
 

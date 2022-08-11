@@ -118,6 +118,7 @@ reg_IF_ID #(
   .clk              (clk              ), // Clock signal
   .reset_n          (reset_n          ), // Asynchronous reset
   .IF_flush         (IF_ID_flush      ),
+  .IF_ID_write      (IF_ID_write      ),
   .pc               (pc               ), // PC
   .inst             (inst             ), // Instruction
   .IF_ID_pc         (IF_ID_pc         ), // IF_ID_PC

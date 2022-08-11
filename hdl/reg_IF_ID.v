@@ -8,7 +8,8 @@ module reg_IF_ID #(
 (
   input                           clk              , // Clock signal
   input                           reset_n          , // Asynchronous reset
-  input                           IF_flush         , // IF flush
+  input                           IF_flush         , // IF/ID flush
+  input                           IF_ID_write      , // IF/ID write
   input      [PC_WIDTH-1:0      ] pc               , // PC
   input      [INST_WIDTH-1:0    ] inst             , // Instruction
   output reg [PC_WIDTH-1:0      ] IF_ID_pc         , // IF_ID_PC
@@ -27,11 +28,7 @@ module reg_IF_ID #(
     if(~reset_n) begin
       IF_ID_pc <= 0;
     end else begin
-      if (IF_flush) begin
-        IF_ID_pc <= 0;
-      end else begin
-        IF_ID_pc <= pc;
-      end
+      IF_ID_pc <= pc;
     end
   end
 
@@ -43,7 +40,9 @@ module reg_IF_ID #(
     if(~reset_n) begin
       IF_ID_inst <= 0;
     end else begin
-      IF_ID_inst <= inst;
+      if (IF_ID_write) begin
+        IF_ID_inst <= inst;
+      end
     end
   end
 

@@ -39,9 +39,11 @@ module forwarding_unit #(
 
   always @(*) begin : proc_forward_comp1
     if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) begin
-      forward_comp1 = 2'b10;
-    end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b01;
+    end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs1)) begin
+      forward_comp1 = 2'b10;
+    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == IF_ID_rs1)) begin
+      forward_comp1 = 2'b11;
     end else begin
       forward_comp1 = 2'b00;
     end
@@ -56,6 +58,8 @@ module forwarding_unit #(
       forward_comp2 = 2'b10;
     end else if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs2 == ID_EX_rd)) begin
       forward_comp2 = 2'b01;
+    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == IF_ID_rs2)) begin
+      forward_comp2 = 2'b11;
     end else begin
       forward_comp2 = 2'b00;
     end

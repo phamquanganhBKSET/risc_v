@@ -48,9 +48,7 @@ module IMEM #(
     if(~reset_n) begin
       inst <= 0;
     end else begin
-      if (!wr_en) begin
-        inst <= {imem[pc + 3], imem[pc + 2], imem[pc + 1], imem[pc]}; // Little endian
-      end
+      inst <= {imem[pc + 3], imem[pc + 2], imem[pc + 1], imem[pc]}; // Little endian
     end
   end
 

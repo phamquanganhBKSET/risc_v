@@ -128,6 +128,10 @@ module stage_ID #(
       2'b10: begin
         data_out_1 = DMEM_data_out;
       end
+
+      2'b11: begin
+        data_out_1 = WB_data;
+      end
     endcase
   end
 
@@ -144,6 +148,10 @@ module stage_ID #(
 
       2'b10: begin
         data_out_2 = DMEM_data_out;
+      end
+
+      2'b11: begin
+        data_out_2 = WB_data;
       end
     endcase
   end

@@ -83,6 +83,8 @@ wire [REG_ADDR_WIDTH-1:0]      MEM_WB_rs1         ; // IF/ID.RegisterRs1
 wire [REG_ADDR_WIDTH-1:0]      MEM_WB_rs2         ; // IF/ID.RegisterRs2
 wire                           MEM_WB_reg_write_en; // ID/EX Reg write enable
 wire                           MEM_WB_reg_wb_sel  ;
+wire [PC_WIDTH-1:0      ]      IF_ID_pc_next      ; // PC next
+wire [PC_WIDTH-1:0      ]      ID_EX_pc_next      ; // PC_next
 
 stage_IF #(
   .MEM_WIDTH  (MEM_WIDTH  ),
@@ -110,9 +112,11 @@ reg_IF_ID #(
   .IF_flush         (IF_flush         ),
   .IF_ID_write      (IF_ID_write      ),
   .pc               (pc               ), // PC
+  .pc_next          (pc_next          ), // PC
   .inst             (inst             ), // Instruction
   .IF_ID_pc         (IF_ID_pc         ), // IF_ID_PC
   .IF_ID_inst       (IF_ID_inst       ), // IF_ID_inst
+  .IF_ID_pc_next    (IF_ID_pc_next    ), // IF/ID PC_next
   .IF_ID_inst_opcode(IF_ID_inst_opcode), // IF/ID instruction opcode
   .IF_ID_rs1        (IF_ID_rs1        ), // IF/ID.RegisterRs1
   .IF_ID_rs2        (IF_ID_rs2        ), // IF/ID.RegisterRs2
@@ -178,6 +182,7 @@ reg_ID_EX #(
   .IF_ID_rs1         (IF_ID_rs1         ), // IF/ID.RegisterRs1
   .IF_ID_rs2         (IF_ID_rs2         ), // IF/ID.RegisterRs2
   .IF_ID_rd          (IF_ID_rd          ), // IF/ID.RegisterRd
+  .IF_ID_pc_next     (IF_ID_pc_next     ), // IF/ID PC_next
   .pc_sel            (pc_sel            ), // PC select
   .ctr_sel           (ctrl_sel          ), // Control select
   .data_out_1        (data_out_1        ), // Data out rs1
@@ -202,6 +207,7 @@ reg_ID_EX #(
   .ID_EX_mem_write_en(ID_EX_mem_write_en), // ID/EX MEM write enable
   .ID_EX_ASel        (ID_EX_ASel        ), // A select
   .ID_EX_BSel        (ID_EX_BSel        ), // B select
+  .ID_EX_pc_next     (ID_EX_pc_next     ), // PC next
   .ID_EX_wb_sel      (ID_EX_wb_sel      )  // ID/EX WB select
 );
 
@@ -233,6 +239,7 @@ reg_EX_MEM #(
   .alu_out            (alu_out            ), // ALU out
   .dataB              (dataB              ), // Data B
   .ID_EX_inst_opcode  (ID_EX_inst_opcode  ), // IF/ID instruction opcode
+  .ID_EX_pc_next      (ID_EX_pc_next      ), // PC next
   .ID_EX_rs1          (ID_EX_rs1          ), // IF/ID.RegisterRs1
   .ID_EX_rs2          (ID_EX_rs2          ), // IF/ID.RegisterRs2
   .ID_EX_rd           (ID_EX_rd           ), // IF/ID.RegisterRd

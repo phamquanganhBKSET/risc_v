@@ -11,13 +11,15 @@ module reg_IF_ID #(
   input                           IF_flush         , // IF/ID flush
   input                           IF_ID_write      , // IF/ID write
   input      [PC_WIDTH-1:0      ] pc               , // PC
+  input      [PC_WIDTH-1:0      ] pc_next          , // PC
   input      [INST_WIDTH-1:0    ] inst             , // Instruction
   output reg [PC_WIDTH-1:0      ] IF_ID_pc         , // IF_ID_PC
   output reg [INST_WIDTH-1:0    ] IF_ID_inst       , // IF_ID_inst
   output     [6:0               ] IF_ID_inst_opcode, // IF/ID instruction opcode
   output     [REG_ADDR_WIDTH-1:0] IF_ID_rs1        , // IF/ID.RegisterRs1
   output     [REG_ADDR_WIDTH-1:0] IF_ID_rs2        , // IF/ID.RegisterRs2
-  output     [REG_ADDR_WIDTH-1:0] IF_ID_rd           // IF/ID.RegisterRd
+  output     [REG_ADDR_WIDTH-1:0] IF_ID_rd         , // IF/ID.RegisterRd
+  output reg [PC_WIDTH-1:0      ] IF_ID_pc_next      // PC next
 );
 
   //============================================
@@ -31,6 +33,18 @@ module reg_IF_ID #(
       IF_ID_pc <= pc;
     end
   end
+
+  //============================================
+  //                  IF/ID PC_next
+  //============================================
+  always @(posedge clk or negedge reset_n) begin : proc_IF_ID_pc_next
+    if(~reset_n) begin
+      IF_ID_pc_next <= 0;
+    end else begin
+      IF_ID_pc_next <= pc_next;
+    end
+  end
+
 
   //============================================
   //             IF/ID Instruction

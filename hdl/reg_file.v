@@ -34,7 +34,7 @@ module reg_file #(
         regs[i] <= i;
       end
     end
-    if (wr_en) begin
+    if (wr_en & (addr_rd != 0)) begin
       regs[addr_rd] <= data_rd;
     end
   end

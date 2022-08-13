@@ -2,11 +2,13 @@
 
 module reg_ID_EX #(
   parameter REG_WIDTH      = `REG_WIDTH     ,
-  parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH
+  parameter REG_ADDR_WIDTH = `REG_ADDR_WIDTH,
+  parameter PC_WIDTH       = `PC_WIDTH      
 )
 (
   input                           clk               , // Clock signal
   input                           reset_n           , // Asynchronous reset
+  input      [PC_WIDTH-1:0      ] IF_ID_pc_next     ,// PC_next
   input      [6:0               ] IF_ID_inst_opcode , // IF/ID instruction opcode
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1         , // IF/ID.RegisterRs1
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2         , // IF/ID.RegisterRs2
@@ -35,6 +37,7 @@ module reg_ID_EX #(
   output reg                      ID_EX_mem_write_en, // ID/EX MEM write enable
   output reg                      ID_EX_ASel        , // A select
   output reg                      ID_EX_BSel        , // B select
+  output reg [PC_WIDTH-1:0      ] ID_EX_pc_next     ,// PC_next
   output reg                      ID_EX_wb_sel        // ID/EX WB select
 );
 
@@ -70,11 +73,13 @@ module reg_ID_EX #(
       ID_EX_rs1         <= 0;
       ID_EX_rs2         <= 0;
       ID_EX_rd          <= 0;
+      ID_EX_wb_sel      <= 0;
     end else begin
       ID_EX_inst_opcode <= IF_ID_inst_opcode;
       ID_EX_rs1         <= IF_ID_rs1        ;
       ID_EX_rs2         <= IF_ID_rs2        ;
       ID_EX_rd          <= IF_ID_rd         ;
+      ID_EX_wb_sel      <= IF_ID_pc_next    ;
     end
   end
 

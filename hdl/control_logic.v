@@ -46,7 +46,7 @@ assign funct7 = inst[31:25];
 
 always @(*) begin : proc_IF_flush
 	IF_flush = 0;
-	case ({opcode, funct3})
+	casex ({opcode, funct3})
 		{B_OPCODE, `BEQ_FUNCT3}: begin
 			IF_flush = br_eq;
 		end
@@ -69,6 +69,10 @@ always @(*) begin : proc_IF_flush
 
 		{B_OPCODE, `BGEU_FUNCT3}: begin
 			IF_flush = (!br_lt);
+		end
+
+		{J_OPCODE, 3'b???}: begin
+			IF_flush = 1;
 		end
 	endcase
 end
@@ -224,6 +228,18 @@ always @(*) begin
 			br_un           = 0;
 			alu_sel         = 0; // Add I
 		end
+
+		J_OPCODE: begin
+			pc_sel          = 1; // Imm
+			imm_sel         = `IMM_SEL_J;
+			reg_write_en  	= 1; // 0
+			ASel            = 0; // Reg
+			BSel            = 1; // Imm
+			mem_write       = 0; // Read
+			wb_sel          = 1; // ALU
+			br_un           = 0;
+		end
+
 		default : begin
 			imm_sel         = `IMM_SEL_R;
 			reg_write_en  	= 0;

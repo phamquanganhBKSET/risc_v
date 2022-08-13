@@ -5,7 +5,7 @@ pathRiscV = "C:/Users/Dell Latitude/OneDrive - Hanoi University of Science and T
 
 shutil.rmtree(pathRiscV+"simple")
 
-cnv = AssemblyConverter(output_type = "pbt", nibble = False, hexMode = False)
+cnv = AssemblyConverter(output_type = "pt", nibble = False, hexMode = False)
 cnv.convert("simple.s")
 
 

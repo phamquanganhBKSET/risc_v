@@ -30,7 +30,7 @@ module DMEM #(
   always @(posedge clk or negedge reset_n) begin : proc_dmem
     if (~reset_n) begin
       for (i = 0; i < DMEM_DEPTH; i = i + 4) begin
-        {dmem[i+3], dmem[i+2], dmem[i+1], dmem[i]} <= i / 4;
+        {dmem[i+3], dmem[i+2], dmem[i+1], dmem[i]} <= (i / 4) % 3;
       end
     end else if (wr_en) begin
       {dmem[addr+3], dmem[addr+2], dmem[addr+1], dmem[addr]} <= wr_data;

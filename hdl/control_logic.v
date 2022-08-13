@@ -18,7 +18,8 @@ module control_logic #(
 	output reg        						 BSel          ,
 	output reg [2:0						 	 ] alu_sel       ,
 	output reg     						 	   mem_write     ,
-	output reg     						 	   wb_sel         
+	output reg     						 	   wb_sel        ,
+	output reg 										 IF_flush				
 );
 
 wire [6:0] opcode;
@@ -38,6 +39,43 @@ localparam  R_OPCODE      = 7'b0110011,
 assign opcode = inst[6:0];
 assign funct3 = inst[14:12];
 assign funct7 = inst[31:25];
+
+//----------------------------------------------------------------
+//         IF_flush
+//----------------------------------------------------------------
+
+always @(*) begin : proc_IF_flush
+	IF_flush = 0;
+	case ({opcode, funct3})
+		{B_OPCODE, `BEQ_FUNCT3}: begin
+			IF_flush = br_eq;
+		end
+
+		{B_OPCODE, `BNE_FUNCT3}: begin
+			IF_flush = (!br_eq);
+		end
+
+		{B_OPCODE, `BLT_FUNCT3}: begin
+			IF_flush = br_lt;
+		end
+
+		{B_OPCODE, `BGE_FUNCT3}: begin
+			IF_flush = (!br_lt);
+		end
+
+		{B_OPCODE, `BLTU_FUNCT3}: begin
+			IF_flush = br_lt;
+		end
+
+		{B_OPCODE, `BGEU_FUNCT3}: begin
+			IF_flush = (!br_lt);
+		end
+	endcase
+end
+
+//----------------------------------------------------------------
+//         Control logic
+//----------------------------------------------------------------
 
 always @(*) begin
 	case (opcode)

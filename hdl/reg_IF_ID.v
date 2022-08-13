@@ -40,7 +40,9 @@ module reg_IF_ID #(
     if(~reset_n) begin
       IF_ID_inst <= 0;
     end else begin
-      if (IF_ID_write) begin
+      if (IF_flush) begin
+        IF_ID_inst <= 0;
+      end else if (IF_ID_write) begin
         IF_ID_inst <= inst;
       end
     end

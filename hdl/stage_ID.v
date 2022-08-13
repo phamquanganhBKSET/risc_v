@@ -32,7 +32,8 @@ module stage_ID #(
   output                          mem_write_en     , // MEM write enable
   output                          ASel             , // A select
   output                          BSel             , // B select
-  output                          wb_sel             // WB select
+  output                          wb_sel           , // WB select
+  output                          IF_flush           // IF flush
 );
   
   //============================================
@@ -107,7 +108,8 @@ module stage_ID #(
       .BSel          (BSel          ),
       .alu_sel       (alu_sel       ),
       .mem_write     (mem_write_en  ),
-      .wb_sel        (wb_sel        ) 
+      .wb_sel        (wb_sel        ),
+      .IF_flush      (IF_flush      )
   );
 
   //============================================

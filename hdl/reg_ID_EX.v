@@ -73,13 +73,13 @@ module reg_ID_EX #(
       ID_EX_rs1         <= 0;
       ID_EX_rs2         <= 0;
       ID_EX_rd          <= 0;
-      ID_EX_wb_sel      <= 0;
+      ID_EX_pc_next     <= 0;
     end else begin
       ID_EX_inst_opcode <= IF_ID_inst_opcode;
       ID_EX_rs1         <= IF_ID_rs1        ;
       ID_EX_rs2         <= IF_ID_rs2        ;
       ID_EX_rd          <= IF_ID_rd         ;
-      ID_EX_wb_sel      <= IF_ID_pc_next    ;
+      ID_EX_pc_next     <= IF_ID_pc_next    ;
     end
   end
 

@@ -31,7 +31,7 @@ module forwarding_unit #(
   //                Check opcode
   //============================================
 
-  assign branch_inst = (IF_ID_inst_opcode == 7'b1100111);
+  assign branch_inst = (IF_ID_inst_opcode == 7'b1100011);
 
   //============================================
   //            Forwarding compare 1
@@ -40,7 +40,7 @@ module forwarding_unit #(
   always @(*) begin : proc_forward_comp1
     if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) begin
       forward_comp1 = 2'b01;
-    end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs1)) begin
+    end else if (branch_inst && (EX_MEM_rd != 0) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b10;
     end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b11;
@@ -54,7 +54,7 @@ module forwarding_unit #(
   //============================================
 
   always @(*) begin : proc_forward_comp2
-    if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs2)) begin
+    if (branch_inst && (EX_MEM_rd != 0) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs2)) begin
       forward_comp2 = 2'b10;
     end else if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs2 == ID_EX_rd)) begin
       forward_comp2 = 2'b01;

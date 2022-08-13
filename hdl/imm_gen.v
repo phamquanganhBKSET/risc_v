@@ -27,7 +27,7 @@ module imm_gen #(
       end
 
       `IMM_SEL_J : begin
-        imm_out = {{19{inst[31]}}, inst[31:20], 1'b0};
+        imm_out = {{12{inst[31]}}, inst[19:12], inst[20], inst[30:21], 1'b0};
       end
     endcase
   end

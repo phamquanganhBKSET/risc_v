@@ -1,11 +1,6 @@
-.data
-var1: .word 11 23 45 5 61 5 66
-var2: .word 7
-.text
-la x4 var1
-lw x5 var2
+lw x4 0(x1)
 addi x6 x6 0
-addi x7 x5 -1
+addi x7 x0 10
 
 loop1: 
 beq x6 x7 exit
@@ -31,4 +26,4 @@ next:
 addi x6 x6 1
 jal x0 loop1
 
-exit:#FALL_THRU
+exit:

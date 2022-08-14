@@ -31,7 +31,7 @@ module reg_file #(
   always @(posedge clk or negedge reset_n) begin : proc_regs
     if (~reset_n) begin
       for (i = 0; i < NUM_REG; i = i + 1) begin
-        regs[i] <= i;
+        regs[i] <= 0;
       end
     end
     if (wr_en & (addr_rd != 0)) begin

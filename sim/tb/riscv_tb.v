@@ -37,7 +37,7 @@ always #5 clk = ~clk;
 initial begin
   clk = 0;
   reset_n = 0;
-  @(negedge clk);
+  @(posedge clk);
   reset_n = 1;
   repeat(200) begin
     @(negedge clk);

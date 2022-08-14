@@ -1,5 +1,5 @@
 lw x4 0(x1)
-addi x6 x6 0
+addi x6 x0 0
 addi x7 x0 10
 
 loop1: 

@@ -5,6 +5,7 @@ module forwarding_unit #(
 )
 (
   input      [6:0               ] IF_ID_inst_opcode , // IF/ID opcode
+  input      [6:0               ] EX_MEM_inst_opcode, // IF/ID opcode
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1         , // IF/ID.RegisterRs1
   input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2         , // IF/ID.RegisterRs2
   input                           ID_EX_reg_wr_en   , // ID/EX Reg write enable
@@ -12,6 +13,7 @@ module forwarding_unit #(
   input      [REG_ADDR_WIDTH-1:0] ID_EX_rs2         , // ID/EX.RegisterRs2
   input      [REG_ADDR_WIDTH-1:0] ID_EX_rd          , // ID/EX.RegisterRd
   input                           EX_MEM_reg_wr_en  , // EX/MEM Reg write enable
+  input                           EX_MEM_mem_wr_en  , // EX/MEM Mem write enable
   input      [REG_ADDR_WIDTH-1:0] EX_MEM_rd         , // EX/MEM.RegisterRd
   input                           MEM_WB_reg_wr_en  , // MEM/WB Reg write enable
   input      [REG_ADDR_WIDTH-1:0] MEM_WB_rd         , // MEM/WB.RegisterRd
@@ -40,9 +42,10 @@ module forwarding_unit #(
   always @(*) begin : proc_forward_comp1
     if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) begin
       forward_comp1 = 2'b01;
-    end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs1)) begin
+    // end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && (!EX_MEM_mem_wr_en) && (EX_MEM_rd == IF_ID_rs1)) begin
+    end else if (branch_inst & (EX_MEM_inst_opcode == 7'b0000011) & (EX_MEM_rd != 0) & (!EX_MEM_mem_wr_en) & (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b10;
-    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == IF_ID_rs1)) begin
+    end else if (EX_MEM_reg_wr_en & (EX_MEM_rd != 0) & (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b11;
     end else begin
       forward_comp1 = 2'b00;
@@ -72,7 +75,7 @@ module forwarding_unit #(
   always @(*) begin : proc_forwardA
     if (EX_MEM_reg_wr_en & (EX_MEM_rd != 0) & (EX_MEM_rd == ID_EX_rs1)) begin
       forwardA = 2'b10;
-    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == ID_EX_rs1)) begin
+    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & ((MEM_WB_rd == ID_EX_rs1) | (MEM_WB_rd == IF_ID_rs1))) begin
       forwardA = 2'b01;
     end else begin
       forwardA = 2'b00;
@@ -86,7 +89,7 @@ module forwarding_unit #(
   always @(*) begin : proc_forwardB
     if (EX_MEM_reg_wr_en & (EX_MEM_rd != 0) & (EX_MEM_rd == ID_EX_rs2)) begin
       forwardB = 2'b10;
-    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == ID_EX_rs2)) begin
+    end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & ((MEM_WB_rd == ID_EX_rs2) | (MEM_WB_rd == IF_ID_rs2))) begin
       forwardB = 2'b01;
     end else begin
       forwardB = 2'b00;

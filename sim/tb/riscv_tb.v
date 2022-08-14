@@ -33,6 +33,16 @@ riscv #(
 
 always #5 clk = ~clk;
 
+always @(*) begin
+  if (riscv.MEM_WB_inst_opcode === 7'bxxxxxxx) begin
+    repeat(3) begin
+      @(negedge clk);
+    end
+    $stop;
+  end
+
+end
+
 
 initial begin
   clk = 0;

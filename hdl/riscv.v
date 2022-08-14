@@ -158,6 +158,7 @@ stage_ID #(
   .forward_comp2   (forward_comp2      ), // Forward compare 2
   .alu_out         (alu_out            ), // ALU out
   .DMEM_data_out   (DMEM_data_out      ), // DMEM data out
+  .EX_MEM_alu_out  (EX_MEM_alu_out     ), // EX_MEM_alu_out
   .pc_imm          (pc_imm             ), // PC immediate
   .pc_sel          (pc_sel             ), // PC select
   .data_out_1      (data_out_1         ), // Data out rs1
@@ -313,6 +314,7 @@ forwarding_unit #(
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH)
 ) forwarding_unit (
   .IF_ID_inst_opcode (IF_ID_inst_opcode     ), // IF/ID opcode
+  .EX_MEM_inst_opcode(EX_MEM_inst_opcode    ),
   .IF_ID_rs1         (IF_ID_rs1             ), // IF/ID.RegisterRs1
   .IF_ID_rs2         (IF_ID_rs2             ), // IF/ID.RegisterRs2
   .ID_EX_reg_wr_en   (ID_EX_reg_write_en    ), // ID/EX Reg write enable
@@ -320,6 +322,7 @@ forwarding_unit #(
   .ID_EX_rs2         (ID_EX_rs2             ), // ID/EX.RegisterRs2
   .ID_EX_rd          (ID_EX_rd              ), // ID/EX.RegisterRd
   .EX_MEM_reg_wr_en  (EX_MEM_reg_write_en   ), // EX/MEM Reg write enable
+  .EX_MEM_mem_wr_en  (EX_MEM_mem_write_en   ), // EX/MEM Mem write enable
   .EX_MEM_rd         (EX_MEM_rd             ), // EX/MEM.RegisterRd
   .MEM_WB_reg_wr_en  (MEM_WB_reg_write_en   ), // MEM/WB Reg write enable
   .MEM_WB_rd         (MEM_WB_rd             ), // MEM/WB.RegisterRd

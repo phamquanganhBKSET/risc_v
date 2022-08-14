@@ -22,6 +22,7 @@ module stage_ID #(
   input      [1:0               ] forward_comp2    , // Forward compare 2
   input      [REG_WIDTH-1:0     ] alu_out          , // ALU out
   input      [REG_WIDTH-1:0     ] DMEM_data_out    , // DMEM data out
+  input      [REG_WIDTH-1:0     ] EX_MEM_alu_out   , // DMEM data out
   output     [PC_WIDTH-1:0      ] pc_imm           , // PC immediate
   output                          pc_sel           , // PC select
   output reg [REG_WIDTH-1:0     ] data_out_1       , // Data out rs1
@@ -132,7 +133,7 @@ module stage_ID #(
       end
 
       2'b11: begin
-        data_out_1 = WB_data;
+        data_out_1 = EX_MEM_alu_out;
       end
     endcase
   end

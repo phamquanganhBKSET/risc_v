@@ -29,9 +29,9 @@ module reg_IF_ID #(
   always @(posedge clk or negedge reset_n) begin : proc_IF_ID_pc
     if(~reset_n) begin
       IF_ID_pc <= 0;
-    end else begin
+    end else if ((!IF_flush) & IF_ID_write) begin
       IF_ID_pc <= pc;
-    end
+    end 
   end
 
   //============================================

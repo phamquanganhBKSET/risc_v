@@ -1,32 +1,45 @@
-add  x8 ,x12,x14          
-sub  x10,x12,x8   
-addi x15,x10,-50          
-lw   x14, 8(x2)           
-add  x5 ,x19, x14         
-sw   x14, 4(x2)    
-Test:
-beq  x1 , x10 , L1
-lw   x7 ,20(x5)           
-addi x7 ,x11 ,2         
-sw   x7 ,12(x5)           
-sub  x2 ,x11 ,x7        
-and  x14, x5 ,x3 
-L1:  
-sw   x14,16(x5)           
-beq  x1, x1 , L2
-add  x8 ,x12   ,x14       
-sub  x10,x12   ,x8   
-L2:  
-addi x15, x10 ,-50      
-lw   x14, 8(x2)           
-add  x5 ,x14   , x19      
-lw   x14, 20(x2)          
-beq  x14, x1 , L3
-add  x15 ,x12   ,x14      
-jal x1, Test3
-L3:
-add x5, x6, x7
-Test2:
-add x5, x6, x7
-Test3:
-add x5, x1, x7
+addi x1, x0, 9
+sw x1, 0(x0)
+addi x1, x0, 4
+sw x1, 4(x0)
+addi x1, x0, 5
+sw x1, 8(x0)
+addi x1, x0, 4
+sw x1, 12(x0)
+addi x1, x0, 3
+sw x1, 16(x0)
+addi x1, x0, 2
+sw x1, 20(x0)
+addi x1, x0, 1
+sw x1, 24(x0)
+
+ 
+
+addi x4, x0, 0
+addi x6, x0, 0
+addi x7, x0, 7
+loop1:
+beq x6, x7, exit
+sub x8, x7, x6
+addi x9, x0, 0
+loop2:
+beq x8, x9, next
+add x10, x9 , x9
+add x10, x10, x10
+add x10, x10, x4
+lw x11, 0(x10)
+addi x12, x10, 4
+lw x13, 0(x12)
+blt x13, x11, swap
+addi x9, x9, 1
+beq x0, x0, loop2
+swap:
+sw x11, 0(x12)
+sw x13, 0(x10)
+addi x9, x9, 1
+beq x0, x0, loop2
+next:
+addi x6, x6, 1
+beq x0, x0, loop1
+exit:
+addi x1, x0, 1

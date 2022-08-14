@@ -27,5 +27,5 @@ add  x15 ,x12   ,x14
 jal x1, Test2
 L3:
 add x5, x6, x7
-Tes2:
+Test2:
 add x5, x6, x7

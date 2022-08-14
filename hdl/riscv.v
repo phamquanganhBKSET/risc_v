@@ -266,6 +266,7 @@ stage_MEM  #(
   .clk                (clk                ), // Clock
   .reset_n            (reset_n            ), // Asynchronous reset active low
   .EX_MEM_mem_write_en(EX_MEM_mem_write_en), // ID/EX MEM write enable
+  .EX_MEM_inst_opcode (EX_MEM_inst_opcode ), // EX/MEM opcode
   .EX_MEM_alu_out     (EX_MEM_alu_out     ), // ALU out
   .EX_MEM_dataB       (EX_MEM_dataB       ), // Data B
   .DMEM_data_out      (DMEM_data_out      )  // ALU out
@@ -311,21 +312,21 @@ stage_WB #(
 forwarding_unit #(
   .REG_ADDR_WIDTH(REG_ADDR_WIDTH)
 ) forwarding_unit (
-  .IF_ID_inst_opcode(IF_ID_inst_opcode     ), // IF/ID opcode
-  .IF_ID_rs1        (IF_ID_rs1             ), // IF/ID.RegisterRs1
-  .IF_ID_rs2        (IF_ID_rs2             ), // IF/ID.RegisterRs2
-  .ID_EX_reg_wr_en  (ID_EX_reg_write_en    ), // ID/EX Reg write enable
-  .ID_EX_rs1        (ID_EX_rs1             ), // ID/EX.RegisterRs1
-  .ID_EX_rs2        (ID_EX_rs2             ), // ID/EX.RegisterRs2
-  .ID_EX_rd         (ID_EX_rd              ), // ID/EX.RegisterRd
-  .EX_MEM_reg_wr_en (EX_MEM_reg_write_en   ), // EX/MEM Reg write enable
-  .EX_MEM_rd        (EX_MEM_rd             ), // EX/MEM.RegisterRd
-  .MEM_WB_reg_wr_en (MEM_WB_reg_write_en   ), // MEM/WB Reg write enable
-  .MEM_WB_rd        (MEM_WB_rd             ), // MEM/WB.RegisterRd
-  .forwardA         (forwardA              ), // Forwarding A
-  .forwardB         (forwardB              ), // Forwarding B
-  .forward_comp1    (forward_comp1         ), // Forwarding compare 1
-  .forward_comp2    (forward_comp2         )  // Forwarding compare 2
+  .IF_ID_inst_opcode (IF_ID_inst_opcode     ), // IF/ID opcode
+  .IF_ID_rs1         (IF_ID_rs1             ), // IF/ID.RegisterRs1
+  .IF_ID_rs2         (IF_ID_rs2             ), // IF/ID.RegisterRs2
+  .ID_EX_reg_wr_en   (ID_EX_reg_write_en    ), // ID/EX Reg write enable
+  .ID_EX_rs1         (ID_EX_rs1             ), // ID/EX.RegisterRs1
+  .ID_EX_rs2         (ID_EX_rs2             ), // ID/EX.RegisterRs2
+  .ID_EX_rd          (ID_EX_rd              ), // ID/EX.RegisterRd
+  .EX_MEM_reg_wr_en  (EX_MEM_reg_write_en   ), // EX/MEM Reg write enable
+  .EX_MEM_rd         (EX_MEM_rd             ), // EX/MEM.RegisterRd
+  .MEM_WB_reg_wr_en  (MEM_WB_reg_write_en   ), // MEM/WB Reg write enable
+  .MEM_WB_rd         (MEM_WB_rd             ), // MEM/WB.RegisterRd
+  .forwardA          (forwardA              ), // Forwarding A
+  .forwardB          (forwardB              ), // Forwarding B
+  .forward_comp1     (forward_comp1         ), // Forwarding compare 1
+  .forward_comp2     (forward_comp2         )  // Forwarding compare 2
 );
 
 

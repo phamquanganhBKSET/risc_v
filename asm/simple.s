@@ -24,8 +24,10 @@ add  x5 ,x14   , x19
 lw   x14, 20(x2)          
 beq  x14, x1 , L3
 add  x15 ,x12   ,x14      
-jal x1, Test2
+jal x1, Test
 L3:
 add x5, x6, x7
 Test2:
 add x5, x6, x7
+Test3:
+add x5, x1, x7

@@ -42,7 +42,7 @@ module alu #(
       end
 
       3'b111 : begin // SRA
-        alu_out = (dataA << (REG_WIDTH - dataB)) | dataA;
+        alu_out = dataA >>> dataB;
       end
     endcase
   end

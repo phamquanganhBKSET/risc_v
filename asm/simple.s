@@ -1,4 +1,3 @@
-nop
 add  x8 ,x12,x14          
 sub  x10,x12,x8   
 addi x15,x10,-50          
@@ -24,7 +23,7 @@ add  x5 ,x14   , x19
 lw   x14, 20(x2)          
 beq  x14, x1 , L3
 add  x15 ,x12   ,x14      
-jal x1, Test
+jal x1, Test3
 L3:
 add x5, x6, x7
 Test2:

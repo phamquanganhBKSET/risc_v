@@ -1,4 +1,4 @@
-`define FILE_PATH       "..\\tb\\inst.txt"
+`define FILE_PATH       "..\\..\\asm\\bubbleSort\\binary.txt"
 `define INST_WIDTH      32
 `define REG_WIDTH       32
 `define NUM_REG         32
@@ -6,7 +6,8 @@
 `define IMM_WIDTH       12
 `define IMM_WIDTH_U     20
 `define IMEM_DEPTH      (1<<10)
-`define DMEM_DEPTH      (1<<10)
+// `define DMEM_DEPTH      (1<<10)
+`define DMEM_DEPTH      40
 `define REG_ADDR_WIDTH  $clog2(`NUM_REG)
 `define PC_WIDTH        32
 `define DMEM_ADDR_WIDTH 32

@@ -1,4 +1,4 @@
-addi x1, x0, 9
+addi x1, x0, 1
 sw x1, 0(x0)
 addi x1, x0, 4
 sw x1, 4(x0)

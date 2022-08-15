@@ -145,32 +145,33 @@ stage_ID #(
   .INST_WIDTH    (INST_WIDTH    ),
   .IMM_SEL_WIDTH (IMM_SEL_WIDTH ) 
 ) stage_ID (
-  .clk             (clk                ), // Clock signal
-  .reset_n         (reset_n            ), // Asynchronous reset
-  .IF_ID_pc        (IF_ID_pc           ), // IF/ID PC
-  .IF_ID_inst      (IF_ID_inst         ), // ID/ID instruction
-  .IF_ID_rs1       (IF_ID_rs1          ), // IF/ID.RegisterRs1
-  .IF_ID_rs2       (IF_ID_rs2          ), // IF/ID.RegisterRs2
-  .MEM_WB_reg_wr_en(MEM_WB_reg_write_en), // MEM/WB RegWrite
-  .MEM_WB_rd       (MEM_WB_rd          ), // MEM/WB.RegisterRd
-  .WB_data         (WB_data            ), // WB data
-  .forward_comp1   (forward_comp1      ), // Forward compare 1
-  .forward_comp2   (forward_comp2      ), // Forward compare 2
-  .alu_out         (alu_out            ), // ALU out
-  .DMEM_data_out   (DMEM_data_out      ), // DMEM data out
-  .EX_MEM_alu_out  (EX_MEM_alu_out     ), // EX_MEM_alu_out
-  .pc_imm          (pc_imm             ), // PC immediate
-  .pc_sel          (pc_sel             ), // PC select
-  .data_out_1      (data_out_1         ), // Data out rs1
-  .data_out_2      (data_out_2         ), // Data out rs2
-  .imm_out         (imm_out            ), // Immediate out
-  .reg_write_en    (reg_write_en       ), // Reg write enable
-  .alu_sel         (alu_sel            ), // ALU select
-  .mem_write_en    (mem_write_en       ), // MEM write enable
-  .ASel            (ASel               ), // A select
-  .BSel            (BSel               ), // B select
-  .wb_sel          (wb_sel             ), // WB select
-  .IF_flush        (IF_flush           )  // IF flush
+  .clk                (clk                  ), // Clock signal
+  .reset_n            (reset_n              ), // Asynchronous reset
+  .pc_write           (pc_write             ), // PC write
+  .IF_ID_pc           (IF_ID_pc             ), // IF/ID PC
+  .IF_ID_inst         (IF_ID_inst           ), // ID/ID instruction
+  .IF_ID_rs1          (IF_ID_rs1            ), // IF/ID.RegisterRs1
+  .IF_ID_rs2          (IF_ID_rs2            ), // IF/ID.RegisterRs2
+  .MEM_WB_reg_wr_en   (MEM_WB_reg_write_en  ), // MEM/WB RegWrite
+  .MEM_WB_rd          (MEM_WB_rd            ), // MEM/WB.RegisterRd
+  .WB_data            (WB_data              ), // WB data
+  .forward_comp1      (forward_comp1        ), // Forward compare 1
+  .forward_comp2      (forward_comp2        ), // Forward compare 2
+  .alu_out            (alu_out              ), // ALU out
+  .DMEM_data_out      (DMEM_data_out        ), // DMEM data out
+  .EX_MEM_alu_out     (EX_MEM_alu_out       ), // EX_MEM_alu_out
+  .pc_imm             (pc_imm               ), // PC immediate
+  .pc_sel             (pc_sel               ), // PC select
+  .data_out_1         (data_out_1           ), // Data out rs1
+  .data_out_2         (data_out_2           ), // Data out rs2
+  .imm_out            (imm_out              ), // Immediate out
+  .reg_write_en       (reg_write_en         ), // Reg write enable
+  .alu_sel            (alu_sel              ), // ALU select
+  .mem_write_en       (mem_write_en         ), // MEM write enable
+  .ASel               (ASel                 ), // A select
+  .BSel               (BSel                 ), // B select
+  .wb_sel             (wb_sel               ), // WB select
+  .IF_flush           (IF_flush             )  // IF flush
 );
 
 reg_ID_EX #(

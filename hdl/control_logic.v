@@ -5,21 +5,21 @@ module control_logic #(
   parameter IMM_SEL_WIDTH  = `IMM_SEL_WIDTH 
 )
 (
-	input             						 clk           ,  // Clock
-	input             						 reset_n       ,  // Asynchronous reset active low
-	input             						 br_eq         ,
-	input             						 br_lt         ,
-	input      [INST_WIDTH-1:0   ] inst          ,
-	output reg [IMM_SEL_WIDTH-1:0] imm_sel       ,
-	output reg        						 reg_write_en  ,
-	output reg     						 	   pc_sel        ,
-	output reg     						 	   br_un         ,
-	output reg        						 ASel          ,
-	output reg        						 BSel          ,
-	output reg [2:0						 	 ] alu_sel       ,
-	output reg     						 	   mem_write     ,
-	output reg     						 	   wb_sel        ,
-	output reg 										 IF_flush				
+	input             						 clk           		 ,  // Clock
+	input             						 reset_n       		 ,  // Asynchronous reset active low
+	input             						 br_eq         		 ,
+	input             						 br_lt         		 ,
+	input      [INST_WIDTH-1:0   ] inst          		 ,
+	output reg [IMM_SEL_WIDTH-1:0] imm_sel       		 ,
+	output reg        						 reg_write_en  		 ,
+	output reg     						 	   pc_sel        		 ,
+	output reg     						 	   br_un         		 ,
+	output reg        						 ASel          		 ,
+	output reg        						 BSel          		 ,
+	output reg [2:0						 	 ] alu_sel       		 ,
+	output reg     						 	   mem_write     		 ,
+	output reg     						 	   wb_sel        		 ,
+	output reg 										 IF_flush				    
 );
 
 wire [6:0] opcode;

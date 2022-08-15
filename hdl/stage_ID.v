@@ -9,32 +9,33 @@ module stage_ID #(
   parameter IMM_SEL_WIDTH  = `IMM_SEL_WIDTH  
 )
 (
-  input                           clk              , // Clock signal
-  input                           reset_n          , // Asynchronous reset
-  input      [PC_WIDTH-1:0      ] IF_ID_pc         , // IF/ID PC
-  input      [INST_WIDTH-1:0    ] IF_ID_inst       , // ID/ID instruction
-  input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1        , // IF/ID.RegisterRs1
-  input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2        , // IF/ID.RegisterRs2
-  input                           MEM_WB_reg_wr_en , // MEM/WB RegWrite
-  input      [REG_ADDR_WIDTH-1:0] MEM_WB_rd        , // MEM/WB.RegisterRd
-  input      [REG_WIDTH-1:0     ] WB_data          , // WB data
-  input      [1:0               ] forward_comp1    , // Forward compare 1
-  input      [1:0               ] forward_comp2    , // Forward compare 2
-  input      [REG_WIDTH-1:0     ] alu_out          , // ALU out
-  input      [REG_WIDTH-1:0     ] DMEM_data_out    , // DMEM data out
-  input      [REG_WIDTH-1:0     ] EX_MEM_alu_out   , // DMEM data out
-  output     [PC_WIDTH-1:0      ] pc_imm           , // PC immediate
-  output                          pc_sel           , // PC select
-  output reg [REG_WIDTH-1:0     ] data_out_1       , // Data out rs1
-  output reg [REG_WIDTH-1:0     ] data_out_2       , // Data out rs2
-  output     [REG_WIDTH-1:0     ] imm_out          , // Immediate out
-  output                          reg_write_en     , // Reg write enable
-  output     [2:0               ] alu_sel          , // ALU select
-  output                          mem_write_en     , // MEM write enable
-  output                          ASel             , // A select
-  output                          BSel             , // B select
-  output                          wb_sel           , // WB select
-  output                          IF_flush           // IF flush
+  input                           clk               , // Clock signal
+  input                           reset_n           , // Asynchronous reset
+  input                           pc_write          , // PC write
+  input      [PC_WIDTH-1:0      ] IF_ID_pc          , // IF/ID PC
+  input      [INST_WIDTH-1:0    ] IF_ID_inst        , // ID/ID instruction
+  input      [REG_ADDR_WIDTH-1:0] IF_ID_rs1         , // IF/ID.RegisterRs1
+  input      [REG_ADDR_WIDTH-1:0] IF_ID_rs2         , // IF/ID.RegisterRs2
+  input                           MEM_WB_reg_wr_en  , // MEM/WB RegWrite
+  input      [REG_ADDR_WIDTH-1:0] MEM_WB_rd         , // MEM/WB.RegisterRd
+  input      [REG_WIDTH-1:0     ] WB_data           , // WB data
+  input      [1:0               ] forward_comp1     , // Forward compare 1
+  input      [1:0               ] forward_comp2     , // Forward compare 2
+  input      [REG_WIDTH-1:0     ] alu_out           , // ALU out
+  input      [REG_WIDTH-1:0     ] DMEM_data_out     , // DMEM data out
+  input      [REG_WIDTH-1:0     ] EX_MEM_alu_out    , // DMEM data out
+  output     [PC_WIDTH-1:0      ] pc_imm            , // PC immediate
+  output                          pc_sel            , // PC select
+  output reg [REG_WIDTH-1:0     ] data_out_1        , // Data out rs1
+  output reg [REG_WIDTH-1:0     ] data_out_2        , // Data out rs2
+  output     [REG_WIDTH-1:0     ] imm_out           , // Immediate out
+  output                          reg_write_en      , // Reg write enable
+  output     [2:0               ] alu_sel           , // ALU select
+  output                          mem_write_en      , // MEM write enable
+  output                          ASel              , // A select
+  output                          BSel              , // B select
+  output                          wb_sel            , // WB select
+  output                          IF_flush            // IF flush
 );
   
   //============================================
@@ -96,21 +97,21 @@ module stage_ID #(
     .INST_WIDTH   (INST_WIDTH   ),
     .IMM_SEL_WIDTH(IMM_SEL_WIDTH) 
   ) control_logic_inst (
-      .clk           (clk           ),
-      .reset_n       (reset_n       ),
-      .br_eq         (br_eq         ),
-      .br_lt         (br_lt         ),
-      .inst          (IF_ID_inst    ),
-      .imm_sel       (imm_sel       ),
-      .reg_write_en  (reg_write_en  ),
-      .pc_sel        (pc_sel        ),
-      .br_un         (br_un         ),
-      .ASel          (ASel          ),
-      .BSel          (BSel          ),
-      .alu_sel       (alu_sel       ),
-      .mem_write     (mem_write_en  ),
-      .wb_sel        (wb_sel        ),
-      .IF_flush      (IF_flush      )
+      .clk               (clk               ),
+      .reset_n           (reset_n           ),
+      .br_eq             (br_eq             ),
+      .br_lt             (br_lt             ),
+      .inst              (IF_ID_inst        ),
+      .imm_sel           (imm_sel           ),
+      .reg_write_en      (reg_write_en      ),
+      .pc_sel            (pc_sel            ),
+      .br_un             (br_un             ),
+      .ASel              (ASel              ),
+      .BSel              (BSel              ),
+      .alu_sel           (alu_sel           ),
+      .mem_write         (mem_write_en      ),
+      .wb_sel            (wb_sel            ),
+      .IF_flush          (IF_flush          )
   );
 
   //============================================
@@ -166,9 +167,10 @@ module stage_ID #(
   branch_comp #(
     .REG_WIDTH(REG_WIDTH)
   ) branch_comp_inst (
+      .pc_write(pc_write    ),
       .br_un   (br_un       ),
-      .data_rs1(data_out_1),
-      .data_rs2(data_out_2),
+      .data_rs1(data_out_1  ),
+      .data_rs2(data_out_2  ),
       .br_eq   (br_eq       ),
       .br_lt   (br_lt       ) 
   );

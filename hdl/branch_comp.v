@@ -17,13 +17,13 @@ module branch_comp #(
   //===========================================================
 
   // assign br_eq = br_un ? (data_rs1 == data_rs2) : ($signed(data_rs1) == $signed(data_rs2));
-  assign br_eq = pc_write ? (br_un ? (data_rs1 == data_rs2) : (data_rs1 == data_rs2)) : 0;
+  assign br_eq = pc_write ? (br_un ? ({1'b0,data_rs1} == {1'b0,data_rs2}) : (data_rs1 == data_rs2)) : 0;
 
   //===========================================================
   //            Branch less than
   //===========================================================
 
   // assign br_lt = br_un ? (data_rs1 < data_rs2) : ($signed(data_rs1) < $signed(data_rs2));
-  assign br_lt = pc_write ? (br_un ? (data_rs1 < data_rs2) : (data_rs1 < data_rs2)) : 0;
+  assign br_lt = pc_write ? (br_un ? ({1'b0,data_rs1} < {1'b0,data_rs2}) : (data_rs1 < data_rs2)) : 0;
 
 endmodule

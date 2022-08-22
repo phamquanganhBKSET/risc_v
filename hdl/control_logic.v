@@ -198,36 +198,52 @@ always @(*) begin
 			alu_sel         = 0; // Add I
 		end
 
-		B_OPCODE: begin
-			case (funct3)
-				{`BEQ_FUNCT3} : begin
-					pc_sel     = br_eq ? 1 : 0; // ALU : +4
-				end
+    B_OPCODE: begin
+      case (funct3)
+        {`BEQ_FUNCT3} : begin
+          pc_sel = br_eq; // ALU : +4
+          br_un  = 0;
+        end
 
-				{`BNE_FUNCT3} : begin
-					pc_sel     = br_eq ? 0 : 1; // +4 : ALU
-				end	
+        {`BNE_FUNCT3} : begin
+          pc_sel = !br_eq; // +4 : ALU
+          br_un  = 0;
+        end    
 
-				{`BLT_FUNCT3} : begin
-					pc_sel     = br_lt ? 1 : 0; // ALU : + 4
-				end	
+        {`BLT_FUNCT3} : begin
+          pc_sel = br_lt; // ALU : + 4
+          br_un  = 0;
+        end    
 
-				{`BGE_FUNCT3} : begin
-					pc_sel = br_eq ? 1 : (br_lt) ? 0 : 1;
-				end	
-				default : 
-					pc_sel = 0;
-			endcase
-			imm_sel         = `IMM_SEL_B;
-			reg_write_en  	= 0;
-			ASel            = 0;
-			BSel            = 0;
-			alu_sel         = 0;
-			mem_write       = 0;
-			wb_sel          = 0;
-			br_un           = 0;
-			alu_sel         = 0; // Add I
-		end
+        {`BGE_FUNCT3} : begin
+          pc_sel = br_eq ? 1 : (br_lt) ? 0 : 1;
+          br_un  = 0;
+        end
+
+        {`BLTU_FUNCT3}: begin
+          pc_sel = br_lt;
+          br_un  = 1;
+        end    
+
+        {`BGEU_FUNCT3}: begin
+          pc_sel = br_eq ? 1 : (br_lt) ? 0 : 1;
+          br_un  = 1;
+        end
+
+        default : begin 
+          pc_sel = 0;
+          br_un  = 0;
+        end
+      endcase
+      imm_sel         = `IMM_SEL_B;
+      reg_write_en      = 0;
+      ASel            = 0;
+      BSel            = 0;
+      alu_sel         = 0;
+      mem_write       = 0;
+      wb_sel          = 0;
+      alu_sel         = 0; // Add I
+    end
 
 		J_OPCODE: begin
 			pc_sel          = 1; // Imm

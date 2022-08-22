@@ -27,23 +27,27 @@ module forwarding_unit #(
   //      Internal signals and variables
   //============================================
 
-  wire branch_inst; // Check if instruction is branch type
+  wire IF_ID_branch_inst; // Check if instruction is branch type
+  wire EX_MEM_load_inst; // Check if instruction is load type
+  wire EX_MEM_jump_inst; // Check if instruction is jump type or I-type jump
 
   //============================================
   //                Check opcode
   //============================================
 
-  assign branch_inst = (IF_ID_inst_opcode == `BEQ);
+  assign IF_ID_branch_inst = (IF_ID_inst_opcode == `BEQ);
+  assign EX_MEM_load_inst = (EX_MEM_inst_opcode == `LW);
+  assign EX_MEM_jump_inst = ((EX_MEM_inst_opcode == `JAL) || (EX_MEM_inst_opcode == `JALR));
 
   //============================================
   //            Forwarding compare 1
   //============================================
 
   always @(*) begin : proc_forward_comp1
-    if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) begin
+    if (IF_ID_branch_inst & (ID_EX_rd != 0) & ID_EX_reg_wr_en & (IF_ID_rs1 == ID_EX_rd)) begin
       forward_comp1 = 2'b01;
-    // end else if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && (!EX_MEM_mem_wr_en) && (EX_MEM_rd == IF_ID_rs1)) begin
-    end else if (branch_inst & (EX_MEM_inst_opcode == 7'b0000011) & (EX_MEM_rd != 0) & (!EX_MEM_mem_wr_en) & (EX_MEM_rd == IF_ID_rs1)) begin
+    // end else if (IF_ID_branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && (!EX_MEM_mem_wr_en) && (EX_MEM_rd == IF_ID_rs1)) begin
+    end else if (IF_ID_branch_inst & (EX_MEM_load_inst | EX_MEM_jump_inst) & (EX_MEM_rd != 0) & (!EX_MEM_mem_wr_en) & (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b10;
     end else if (EX_MEM_reg_wr_en & (EX_MEM_rd != 0) & (EX_MEM_rd == IF_ID_rs1)) begin
       forward_comp1 = 2'b11;
@@ -53,13 +57,13 @@ module forwarding_unit #(
   end
 
   //============================================
-  //            Forwarding compare 1
+  //            Forwarding compare 2
   //============================================
 
   always @(*) begin : proc_forward_comp2
-    if (branch_inst && (EX_MEM_rd != 0) && ~(ID_EX_reg_wr_en && (IF_ID_rs1 == ID_EX_rd)) && EX_MEM_reg_wr_en && (EX_MEM_rd == IF_ID_rs2)) begin
+    if (IF_ID_branch_inst & (EX_MEM_load_inst | EX_MEM_jump_inst) & (EX_MEM_rd != 0) & ~(ID_EX_reg_wr_en & (IF_ID_rs1 == ID_EX_rd)) & EX_MEM_reg_wr_en & (EX_MEM_rd == IF_ID_rs2)) begin
       forward_comp2 = 2'b10;
-    end else if (branch_inst && (ID_EX_rd != 0) && ID_EX_reg_wr_en && (IF_ID_rs2 == ID_EX_rd)) begin
+    end else if (IF_ID_branch_inst & (ID_EX_rd != 0) & ID_EX_reg_wr_en & (IF_ID_rs2 == ID_EX_rd)) begin
       forward_comp2 = 2'b01;
     end else if (MEM_WB_reg_wr_en & (MEM_WB_rd != 0) & (MEM_WB_rd == IF_ID_rs2)) begin
       forward_comp2 = 2'b11;

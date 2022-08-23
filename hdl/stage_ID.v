@@ -1,3 +1,18 @@
+//---------------------------------------------------------------
+//                        RISC-V Core
+//                          Ver 1.0
+//                     EDABK  Laboratory
+//                      Copyright  2022
+//---------------------------------------------------------------
+//    Copyright © 2022 by EDABK Laboratory
+//    All rights reserved.
+//
+//    Module  : stage_ID
+//    Project : RISC-V 5-stage pipeline
+//    Author  : Pham Quang Anh, Nguyen Duc Quang, Tran Hong Nhung
+//    Company : EDABK Laboratory
+//----------------------------------------------------------------
+
 `include "../inc/risc_v_defines.vh"
 
 module stage_ID #(
@@ -87,7 +102,7 @@ module stage_ID #(
   //                  PC immediate
   //============================================
 
-  assign pc_imm = imm_out + IF_ID_pc;
+  assign pc_imm = (IF_ID_inst[6:0] == `JALR) ? imm_out + data_rs1 : imm_out + IF_ID_pc;
 
   //============================================
   //                 Control logic

@@ -1,3 +1,18 @@
+//---------------------------------------------------------------
+//                        RISC-V Core
+//                          Ver 1.0
+//                     EDABK  Laboratory
+//                      Copyright  2022
+//---------------------------------------------------------------
+//    Copyright © 2022 by EDABK Laboratory
+//    All rights reserved.
+//
+//    Module  : control_logic
+//    Project : RISC-V 5-stage pipeline
+//    Author  : Pham Quang Anh, Nguyen Duc Quang, Tran Hong Nhung
+//    Company : EDABK Laboratory
+//----------------------------------------------------------------
+
 `include "../inc/risc_v_defines.vh"
 
 module control_logic #(
@@ -34,7 +49,8 @@ localparam  R_OPCODE      = 7'b0110011,
             I_MATH_OPCODE = 7'b0010011,
             S_OPCODE      = 7'b0100011,
             J_OPCODE      = 7'b1101111,
-            B_OPCODE      = 7'b1100011;
+            B_OPCODE      = 7'b1100011,
+            I_JALR_OPCODE = 7'b1100111;
 
 assign opcode = inst[6:0];
 assign funct3 = inst[14:12];
@@ -248,6 +264,17 @@ always @(*) begin
 		J_OPCODE: begin
 			pc_sel          = 1; // Imm
 			imm_sel         = `IMM_SEL_J;
+			reg_write_en  	= 1; // 0
+			ASel            = 0; // Reg
+			BSel            = 1; // Imm
+			mem_write       = 0; // Read
+			wb_sel          = 1; // ALU
+			br_un           = 0;
+		end
+
+		I_JALR_OPCODE: begin
+			pc_sel          = 1; // Imm
+			imm_sel         = `IMM_SEL_I;
 			reg_write_en  	= 1; // 0
 			ASel            = 0; // Reg
 			BSel            = 1; // Imm

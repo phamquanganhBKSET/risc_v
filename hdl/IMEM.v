@@ -1,3 +1,18 @@
+//---------------------------------------------------------------
+//                        RISC-V Core
+//                          Ver 1.0
+//                     EDABK  Laboratory
+//                      Copyright  2022
+//---------------------------------------------------------------
+//    Copyright © 2022 by EDABK Laboratory
+//    All rights reserved.
+//
+//    Module  : IMEM
+//    Project : RISC-V 5-stage pipeline
+//    Author  : Pham Quang Anh, Nguyen Duc Quang, Tran Hong Nhung
+//    Company : EDABK Laboratory
+//----------------------------------------------------------------
+
 `include "../inc/risc_v_defines.vh"
 
 module IMEM #(

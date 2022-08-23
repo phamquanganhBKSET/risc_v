@@ -28,13 +28,12 @@ module reg_file #(
   //============================================
 
   integer i;
-  always @(posedge clk or negedge reset_n) begin : proc_regs
+  always @(posedge clk, negedge reset_n) begin : proc_regs
     if (~reset_n) begin
       for (i = 0; i < NUM_REG; i = i + 1) begin
         regs[i] <= 0;
       end
-    end
-    if (wr_en & (addr_rd != 0)) begin
+    end else if (wr_en & (addr_rd != 0)) begin
       regs[addr_rd] <= data_rd;
     end
   end
@@ -43,7 +42,7 @@ module reg_file #(
   //              Read from DMEM
   //============================================
 
-  always @(negedge clk or negedge reset_n) begin : proc_data_out
+  always @(negedge clk, negedge reset_n) begin : proc_data_out
     if(~reset_n) begin
       data_rs1 <= 0;
       data_rs2 <= 0;

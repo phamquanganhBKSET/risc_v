@@ -39,17 +39,17 @@ addi x12, x10, 4    # x12 = x10 + 4 = &arr[j + 1]
 lw x13, 0(x12)      # x13 = arr[j+1]
 blt x13, x11, swap  # arr[j+1] < arr[j] -> swap
 addi x9, x9, 1      # else j += 1
-jal x0 loop2        # continue loop2
+jal x0, loop2       # continue loop2
 
 swap:
 sw x11, 0(x12)      # arr[j + 1] = x11 = old arr[j]
 sw x13, 0(x10)      # arr[j] = old arr[j + 1]
 addi x9, x9, 1      # j = j + 1
-jal x0 loop2        # continue loop2
+jal x0, loop2       # continue loop2
 
 next:
 addi x6, x6, 1      # i = i + 1
-jal x0 loop1        # continue loop1
+jal x0, loop1       # continue loop1
 
 exit:
 addi x1, x0, 1

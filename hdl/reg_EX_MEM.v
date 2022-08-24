@@ -56,7 +56,7 @@ module reg_EX_MEM #(
       EX_MEM_mem_write_en <= 0;
       EX_MEM_wb_sel       <= 0;
     end else begin
-      EX_MEM_alu_out      <= (ID_EX_inst_opcode == `JAL) ? ID_EX_pc_next : alu_out;
+      EX_MEM_alu_out      <= ((ID_EX_inst_opcode == `JAL) || (ID_EX_inst_opcode == `JALR)) ? ID_EX_pc_next : alu_out;
       EX_MEM_dataB        <= dataB                                                ;
       EX_MEM_inst_opcode  <= ID_EX_inst_opcode                                    ;
       EX_MEM_rs1          <= ID_EX_rs1                                            ;

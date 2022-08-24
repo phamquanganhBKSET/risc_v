@@ -31,7 +31,7 @@ module stage_MEM  #(
 );
 
   wire [REG_WIDTH-1:0] mem_out;
-  assign DMEM_data_out = (EX_MEM_inst_opcode == `JAL) ? EX_MEM_alu_out : mem_out;
+  assign DMEM_data_out = ((EX_MEM_inst_opcode == `JAL) || (EX_MEM_inst_opcode == `JALR)) ? EX_MEM_alu_out : mem_out;
 
 DMEM #(
   .MEM_WIDTH      (MEM_WIDTH      ),
